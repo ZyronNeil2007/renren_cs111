@@ -556,3 +556,54 @@ a, button, summary { touch-action: manipulation; }
 .hero-char:focus-visible { outline-color: #1b1b1b; }
 
 @media (max-width: 560px) { .hero-char { transform-origin: bottom left; } .hc-bubble { font-size: 9px; } }
+
+/* ==========================================================
+   GAME ADDITIONS (used by js/games.js)
+   ========================================================== */
+.px-creeper { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%208%208%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%200h8v1h-8zM0%201h8v1h-8zM0%202h1v1h-1zM3%202h2v1h-2zM7%202h1v1h-1zM0%203h1v1h-1zM3%203h2v1h-2zM7%203h1v1h-1zM0%204h3v1h-3zM5%204h3v1h-3zM0%205h2v1h-2zM6%205h2v1h-2zM0%206h2v1h-2zM6%206h2v1h-2zM0%207h2v1h-2zM3%207h2v1h-2zM6%207h2v1h-2z%27%2F%3E%3C%2Fsvg%3E"); }
+
+.game-area { margin-top: 4px; }
+.game-stat b { color: #ffff55; font-weight: 400; }
+.game .mc-btn[aria-pressed="true"] { background: #2f7a2f; box-shadow: inset 4px 4px 0 #6fd36f, inset -4px -4px 0 #174517; }
+.game-sub { overflow-wrap: anywhere; }
+
+/* Memory */
+.mem-card .mem-front .px { font-size: 44px; color: #6fd36f; }
+.mem-card .mem-back { overflow: hidden; }
+.mem-card .mem-back img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Simon */
+.pad { color: #fff; font-size: 26px; text-shadow: 2px 2px 0 #000; cursor: pointer; }
+.pad[aria-disabled="true"] { cursor: default; }
+/* Dim only the colour (not the label) so the text stays readable */
+@supports (background: color-mix(in srgb, red, blue)) {
+  .pad { filter: none; background: color-mix(in srgb, var(--pc) 52%, #000); }
+  .pad.lit { background: var(--pc); filter: brightness(1.25); }
+}
+
+/* Torches */
+.hole { font-size: 0; }
+
+/* Hearts */
+.faller .px { font-size: 40px; }
+.fall-area { touch-action: manipulation; }
+
+/* Cook */
+.step-btn.shake { color: #fff; }
+
+/* Quiz */
+.quiz .mc-btn { justify-self: start; margin-top: 6px; }
+
+/* Beat tapper */
+.beat-tap { display: block; width: 100%; max-width: 420px; }
+
+/* Tic-tac-toe */
+.ttt .cell.win { background: #2f7a2f; }
+
+@media (max-width: 560px) {
+  .mem-board { gap: 8px; }
+  .mem-card .mem-front .px { font-size: 30px; }
+  .pad { height: 90px; font-size: 20px; }
+  .ttt { grid-template-columns: repeat(3, 84px); }
+  .ttt .cell { height: 84px; }
+}
