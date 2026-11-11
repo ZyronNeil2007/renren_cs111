@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Song · Life Craft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/transition.js"></script>
+</head>
+<body style="--c:#2f56c6; --c2:#2442a0;">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="mc-btn" data-morph href="welcome.html" style="--c:#7d7d7d; --c2:#6b6b6b;">&#9664; World</a>
+    <span class="topbar-title">CHAPTER 7 / 8</span>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero">
+      <span class="hero-icon" aria-hidden="true"><i class="px px-mic"></i></span>
+      <h1>My Song</h1>
+      <p>Grab the mic &mdash; these are the karaoke versions of my favorites.</p>
+    </section>
+
+    <section class="panel-dark player" id="player">
+      <div class="now">
+        <span class="disc" aria-hidden="true"><i class="px px-disc"></i></span>
+        <div>
+          <h2 id="now-title">Pick a track</h2>
+          <small>Karaoke version &middot; sing along!</small>
+        </div>
+        <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <audio id="audio" preload="none"></audio>
+
+      <div class="controls">
+        <button class="mc-btn" id="prev" aria-label="Previous track">&#9664;&#9664;</button>
+        <button class="mc-btn" id="play" aria-label="Play or pause">&#9654; Play</button>
+        <button class="mc-btn" id="next" aria-label="Next track">&#9654;&#9654;</button>
+        <input type="range" id="seek" min="0" max="100" value="0" step="0.1" aria-label="Seek">
+        <span class="time" id="time">0:00 / 0:00</span>
+      </div>
+
+      <div class="tracks" id="tracks">
+        <button class="track" data-title="Kalapastangan" data-src="../img/My%20Song/Kalapastangan.mp3"><b>01</b> Kalapastangan</button>
+        <button class="track" data-title="Kathang Isip" data-src="../img/My%20Song/Kathang%20Isip.mp3"><b>02</b> Kathang Isip</button>
+        <button class="track" data-title="Leaves" data-src="../img/My%20Song/Leaves.mp3"><b>03</b> Leaves</button>
+        <button class="track" data-title="Multo" data-src="../img/My%20Song/Multo.mp3"><b>04</b> Multo</button>
+        <button class="track" data-title="Patlang" data-src="../img/My%20Song/Patlang.mp3"><b>05</b> Patlang</button>
+      </div>
+      <p id="audio-msg" style="margin:0;color:#ffd0d0;font-size:21px" hidden>Couldn't load that audio file. Check that it is inside img/My Song/.</p>
+    </section>
+
+    <section class="panel why">
+      <h2>Why I love this song</h2>
+      <p id="why-text">Write your reason in <b>img/My Song/why_i_choose_this_music.txt</b> and it will show up here automatically. (This works when the site is opened from a web server, not by double-clicking the file.)</p>
+    </section>
+
+    <nav class="pager">
+      <a class="mc-btn" data-morph href="my_favorite_movie.html" style="--c:#5b2a86; --c2:#3f1d61;">&#9664; Movies</a>
+      <a class="mc-btn" data-morph href="joke_time.html" style="--c:#f2c230; --c2:#d4a31c;">Joke Time &#9654;</a>
+    </nav>
+  </main>
+
+  <script src="../js/pages.js"></script>
+</body>
+</html>

@@ -1,153 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Personal Memories Website by Zyron Neil A. Bautista — CS111 Introduction to Computing">
-    <title>My Personal Memories — Zyron Neil A. Bautista | CS111</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Life Craft · Memories Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/transition.js"></script>
 </head>
+<body class="title-body">
+  <a class="skip" href="#main">Skip to content</a>
 
-<body>
+  <div class="sky" aria-hidden="true">
+    <span class="cloud c1"></span>
+    <span class="cloud c2"></span>
+    <span class="cloud c3"></span>
+    <div class="ground"></div>
+  </div>
 
-    <!-- Background Decorative Orbs -->
-    <div class="floating-orbs" aria-hidden="true">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
+  <main id="main" class="title-main">
+    <h1 class="logo"><span>LIFE</span><span>CRAFT</span></h1>
+    <p class="edition">&mdash; Memories Edition &mdash;</p>
+    <p class="splash">Made with love!</p>
 
-    <!-- Navbar -->
-    <nav class="site-nav">
-        <div class="nav-inner">
-            <a href="index.html" class="nav-brand">
-                My Memories
-            </a>
-            <span class="hero-course-badge"> CS111</span>
-        </div>
-    </nav>
+    <a class="mc-btn big play" data-morph href="pages/welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9654; Play World</a>
+    <p class="hint">Press Enter to start</p>
+  </main>
 
-    <!-- Hero Section -->
-    <header class="hero-section">
-        <div class="hero-mesh" aria-hidden="true"></div>
-        <div class="hero-glow" aria-hidden="true"></div>
-        <div class="hero-content">
-            <h1 class="hero-title animate-in animate-in-delay-1">My Personal Memories</h1>
-            <p class="hero-subtitle animate-in animate-in-delay-2">Zyron Neil A. Bautista</p>
-            <p class="hero-description animate-in animate-in-delay-4">
-                Welcome to my digital memory vault. Here, I have compiled different chapters and highlights of my life —
-                from cherished childhood experiences, moments with loved ones and friends, to my personal favorites in
-                food,
-                cinema, and music, plus a little humor to brighten your day.
-            </p>
-            <p class="hero-instruction animate-in animate-in-delay-5">Click on any folder below to explore its contents.
-            </p>
-            <div class="hero-actions animate-in animate-in-delay-5">
-                <a href="https://github.com/ZyronNeil2007/zbautista_cs111" target="_blank" rel="noopener noreferrer"
-                    class="btn-hero btn-hero-primary" id="btn-github-repo">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-                    </svg>
-                    <span>GitHub Repository</span>
-                </a>
-                <a href="https://personal-portfolio-ten-sage-56.vercel.app/" target="_blank" rel="noopener noreferrer"
-                    class="btn-hero btn-hero-secondary" id="btn-portfolio">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path
-                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                        </path>
-                    </svg>
-                    <span>My Portfolio</span>
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="page-container">
-        <h2 class="section-title animate-in animate-in-delay-5">Memory Folders</h2>
-
-        <ul class="folder-grid">
-            <li class="folder-card animate-in animate-in-delay-1">
-                <a href="childhood_memories.html">
-                    <img src="icon/r.png" alt="Childhood Memories Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">Childhood Memories</h3>
-                    <p class="folder-card-desc">Relive moments from my early years, growing up, and playful adventures.
-                    </p>
-                </a>
-            </li>
-            <li class="folder-card animate-in animate-in-delay-2">
-                <a href="family_relatives.html">
-                    <img src="icon/o.png" alt="My Family &amp; Relatives Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">My Family &amp; Relatives</h3>
-                    <p class="folder-card-desc">Cherished memories and bonds with the people who support me
-                        unconditionally.</p>
-                </a>
-            </li>
-            <li class="folder-card animate-in animate-in-delay-3">
-                <a href="my_friends.html">
-                    <img src="icon/y.png" alt="My Friends Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">My Friends</h3>
-                    <p class="folder-card-desc">Unforgettable moments, laughter, and adventures shared with great
-                        friends.</p>
-                </a>
-            </li>
-            <li class="folder-card animate-in animate-in-delay-4">
-                <a href="me_and_my_love.html">
-                    <img src="icon/g.png" alt="Me &amp; My Love Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">Me &amp; My Love</h3>
-                    <p class="folder-card-desc">Heartfelt snapshots and meaningful milestones with someone special.</p>
-                </a>
-            </li>
-            <li class="folder-card animate-in animate-in-delay-5">
-                <a href="my_favorite_food.html">
-                    <img src="icon/b.png" alt="My Favorite Food Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">My Favorite Food</h3>
-                    <p class="folder-card-desc">Delicious dishes that I love, complete with ingredient lists and
-                        recipes.</p>
-                </a>
-            </li>
-            <li class="folder-card animate-in animate-in-delay-6">
-                <a href="my_favorite_movie.html">
-                    <img src="icon/i.png" alt="My Favorite Movie Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">My Favorite Movie</h3>
-                    <p class="folder-card-desc">Film information, synopsis, cast details, and featured clip.</p>
-                </a>
-            </li>
-            <li class="folder-card animate-in animate-in-delay-7">
-                <a href="my_song.html">
-                    <img src="icon/v.png" alt="My Song Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">My Song</h3>
-                    <p class="folder-card-desc">A featured track that resonates with me, song reflections, and audio
-                        player.</p>
-                </a>
-            </li>
-            <li class="folder-card animate-in animate-in-delay-8">
-                <a href="joke_time.html">
-                    <img src="icon/basta.png" alt="Joke Time Folder Icon" class="folder-card-icon">
-                    <h3 class="folder-card-title">Joke Time</h3>
-                    <p class="folder-card-desc">A collection of clean and funny jokes to bring a smile to your face.</p>
-                </a>
-            </li>
-        </ul>
-    </main>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-        <p>&copy; 2026 Zyron Neil A. Bautista | CS111 — Introduction to Computing Personal Memories Project</p>
-    </footer>
-
-    <script src="lightbox.js"></script>
+  <script src="js/home.js"></script>
+  <script src="js/hero.js"></script>
 </body>
-
 </html>

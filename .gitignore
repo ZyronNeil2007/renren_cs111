@@ -1,14 +1,30 @@
-# Operating System Files
+# Operating system files
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# Editor & IDE Directories
+# Editor files
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Temporary & Log Files
+# Temporary files and logs
 *.log
 scratch/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+coverage/
+
+# Local drafts and archived copies
+README_draft.md
+project-structure.txt
+discard/
