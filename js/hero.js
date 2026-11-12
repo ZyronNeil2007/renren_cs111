@@ -17,14 +17,9 @@
   var wrap = document.createElement('div');
   wrap.className = 'hc-wrap';
   wrap.innerHTML =
-    '<div class="hero-char" id="hero" role="button" tabindex="0" aria-label="Pixel Pal: tap to say hi">' +
+    '<div class="hero-char" id="hero" role="button" tabindex="0" aria-label="Mark: tap to say hi">' +
       '<div class="hc-bubble" role="status" aria-live="polite"></div>' +
-      '<div class="hc-body">' +
-        '<div class="hc-arm back"></div><div class="hc-leg back"></div>' +
-        '<div class="hc-torso"></div>' +
-        '<div class="hc-head"><i class="hc-eye l"></i><i class="hc-eye r"></i><i class="hc-mouth"></i></div>' +
-        '<div class="hc-leg front"></div><div class="hc-arm front"></div>' +
-      '</div>' +
+      '<div class="hc-body"></div>' +
       '<div class="hc-shadow"></div>' +
     '</div>';
   document.body.appendChild(wrap);
@@ -46,7 +41,7 @@
   var body = wrap.querySelector('.hc-body');
   var bubble = wrap.querySelector('.hc-bubble');
 
-  var BASE_W = 72;
+  var BASE_W = 80;
   var S = 1;                 // character scale (smaller on short screens)
   var W = BASE_W;            // character width in screen px
   var vw = window.innerWidth;
@@ -56,12 +51,64 @@
   var bubbleW = 0, lastT = '', lastDir = 0, lastWalk = null, lastBx = null;
 
   var lines = [
-    'Hi there!', 'Welcome to my world!', 'Press Play to begin!',
+    'Hi there, I\'m Mark!', 'Welcome to my world!', 'Press Play to begin!',
     'Watch me jump!', 'Nice day for mining.', 'Creeper? Aw man!',
     'I love this place.', 'Try the arrow keys!'
   ];
   var touchLines = lines.slice(0, 7).concat(['Use the buttons below!']);
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+
+  /* ---------------------------------------------------------- 3D skin model
+   * Standard Minecraft 64x64 skin layout. Each box = 6 textured faces. */
+  var U = 5;                                           // px per skin texel
+  function face(parent, tx, ty, fw, fh, tw, th, tf) {
+    // fw x fh = face size in texels on screen, tw x th = texture region in texels
+    var d = document.createElement('div');
+    d.className = 'mc-face';
+    var sx = fw / tw, sy = fh / th;
+    d.style.width = fw * U + 'px'; d.style.height = fh * U + 'px';
+    d.style.backgroundSize = 64 * U * sx + 'px ' + 64 * U * sy + 'px';
+    d.style.backgroundPosition = -tx * U * sx + 'px ' + -ty * U * sy + 'px';
+    d.style.transform = tf;
+    parent.appendChild(d); return d;
+  }
+  // w,h,d = box size in texels; (u0,v0) = skin origin of this body part; grow = overlay inflation
+  function box(w, h, dp, u0, v0, grow) {
+    grow = grow || 0;
+    var el = document.createElement('div'); el.className = 'mc-box';
+    var W2 = (w + grow) * U, H2 = (h + grow) * U, D2 = (dp + grow) * U;
+    el.style.width = W2 + 'px'; el.style.height = H2 + 'px';
+    el.style.left = -grow * U / 2 + 'px'; el.style.top = -grow * U / 2 + 'px';
+    function f(tx, ty, tw, th, fw, fh, tf, ox, oy) {
+      var d = face(el, tx, ty, fw, fh, tw, th, tf);
+      d.style.left = ox + 'px'; d.style.top = oy + 'px';
+    }
+    var fW = w + grow, fH = h + grow, fD = dp + grow;
+    f(u0 + dp,          v0 + dp, w,  h,  fW, fH, 'translateZ(' + D2 / 2 + 'px)', 0, 0);                                   // front
+    f(u0 + dp + w + dp, v0 + dp, w,  h,  fW, fH, 'rotateY(180deg) translateZ(' + D2 / 2 + 'px)', 0, 0);                    // back
+    f(u0,               v0 + dp, dp, h,  fD, fH, 'rotateY(-90deg) translateZ(' + W2 / 2 + 'px)', (W2 - D2) / 2, 0);         // character's right
+    f(u0 + dp + w,      v0 + dp, dp, h,  fD, fH, 'rotateY(90deg) translateZ(' + W2 / 2 + 'px)', (W2 - D2) / 2, 0);          // character's left
+    f(u0 + dp,          v0,      w,  dp, fW, fD, 'rotateX(90deg) translateZ(' + H2 / 2 + 'px)', 0, (H2 - D2) / 2);          // top
+    f(u0 + dp + w,      v0,      w,  dp, fW, fD, 'rotateX(-90deg) translateZ(' + H2 / 2 + 'px)', 0, (H2 - D2) / 2);         // bottom
+    return el;
+  }
+  function part(cls, left, top, w, h, kids) {
+    var p = document.createElement('div'); p.className = 'mc-part ' + cls;
+    p.style.left = left * U + 'px'; p.style.top = top * U + 'px';
+    p.style.width = w * U + 'px'; p.style.height = h * U + 'px';
+    kids.forEach(function (k) { p.appendChild(k); });
+    return p;
+  }
+  var model = document.createElement('div'); model.className = 'mc-model';
+  model.appendChild(part('mc-limb b', 4, 20, 4, 12, [box(4, 12, 4, 0, 16)]));              // right leg
+  model.appendChild(part('mc-limb a', 8, 20, 4, 12, [box(4, 12, 4, 16, 48)]));             // left leg
+  model.appendChild(part('', 4, 8, 8, 12, [box(8, 12, 4, 16, 16)]));                       // body
+  model.appendChild(part('mc-limb a', 0, 8, 4, 12, [box(4, 12, 4, 40, 16)]));              // right arm
+  var armL = part('mc-limb b wave', 12, 8, 4, 12, [box(4, 12, 4, 32, 48)]);               // left arm (wristband, waves)
+  model.appendChild(armL);
+  model.appendChild(part('', 4, 0, 8, 8, [box(8, 8, 8, 0, 0), box(8, 8, 8, 32, 0, 1)]));   // head + hair layer
+  body.appendChild(model);
 
   /* ---------------------------------------------------------- layout */
   function layout() {
@@ -174,9 +221,10 @@
 
     var t = 'translate(' + x.toFixed(1) + 'px,' + (-y).toFixed(1) + 'px) scale(' + S + ')';
     if (t !== lastT) { hero.style.transform = t; lastT = t; }
-    if (dir !== lastDir) { body.style.transform = 'scaleX(' + dir + ')'; lastDir = dir; }
     var walking = !!move && y === 0;
-    if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; }
+    if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; lastDir = 0; }
+    // walking = side view in the travel direction; idle = turn toward the viewer (3/4 view)
+    if (dir !== lastDir) { model.style.setProperty('--ry', (walking ? dir * 90 : dir * 25) + 'deg'); lastDir = dir; }
 
     // keep the speech bubble fully on screen (shift in character-local units)
     if (bubbleW && bubble.classList.contains('show')) {

@@ -514,35 +514,28 @@ a, button, summary { touch-action: manipulation; }
    ========================================================== */
 .hc-wrap { position: fixed; left: 0; right: 0; bottom: var(--ground-h); height: 0; z-index: 3; pointer-events: none; }
 .hero-char {
-  position: absolute; left: 0; bottom: -8px; width: 72px; height: 160px;
+  position: absolute; left: 0; bottom: -8px; width: 80px; height: 160px;
   pointer-events: auto; cursor: pointer; will-change: transform;
   transform-origin: 0 100%; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
 }
-.hc-body { position: absolute; inset: 0; }
-.hc-body > div, .hc-head { position: absolute; border: 4px solid #000; }
-.hc-head {
-  left: 8px; top: 0; width: 56px; height: 52px; background: #f0c9a0; z-index: 3;
-  box-shadow: inset 4px 4px 0 rgba(255,255,255,.25), inset -4px -4px 0 rgba(0,0,0,.18);
+/* 3D Minecraft model built from the real 64x64 skin (skins/mark.png) by js/hero.js.
+   1 skin texel = --u px. Faces are cut out of the skin with background-position. */
+.hc-body { position: absolute; inset: 0; perspective: 700px; perspective-origin: 50% 35%; }
+.mc-model { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(var(--ry, 0deg)); transition: transform .28s ease-out; }
+.mc-part, .mc-box { position: absolute; transform-style: preserve-3d; }
+.mc-limb { transform-origin: 50% 0; }
+.mc-face {
+  position: absolute; backface-visibility: hidden;
+  background-image: url(../skins/mark.png); background-repeat: no-repeat;
+  image-rendering: pixelated;
 }
-.hc-head::before { /* yellow beanie */
-  content: ''; position: absolute; left: -4px; right: -4px; top: -4px; height: 18px; background: #f2c230;
-  border: 4px solid #000; box-shadow: inset 0 -4px 0 #d4a31c;
-}
-.hc-eye { position: absolute; top: 26px; width: 8px; height: 10px; background: #1b1b1b; animation: blinkEye 4s steps(1) infinite; }
-.hc-eye.l { left: 30px; } .hc-eye.r { left: 12px; }
-.hc-mouth { position: absolute; left: 22px; top: 40px; width: 14px; height: 4px; background: #8a3a3a; }
-@keyframes blinkEye { 0%, 94%, 100% { height: 10px; } 96% { height: 2px; margin-top: 8px; } }
-.hc-torso { left: 12px; top: 48px; width: 48px; height: 62px; background: #7b3fb0; z-index: 2;
-  box-shadow: inset 4px 4px 0 rgba(255,255,255,.25), inset -4px -4px 0 rgba(0,0,0,.28); }
-.hc-torso::after { content: ''; position: absolute; left: 14px; top: 20px; width: 12px; height: 12px; background: #f2c230; border: 3px solid #000; }
-.hc-arm { top: 50px; width: 18px; height: 58px; background: #f0c9a0; transform-origin: 50% 8px; z-index: 4; box-shadow: inset 0 -16px 0 #7b3fb0; }
-.hc-arm.back { left: 0; z-index: 1; filter: brightness(.85); }
-.hc-arm.front { left: 54px; }
-.hc-leg { top: 108px; width: 22px; height: 50px; background: #4a4a5c; transform-origin: 50% 0; z-index: 1;
-  box-shadow: inset 0 -12px 0 #c0392b; }
-.hc-leg.back { left: 14px; filter: brightness(.85); }
-.hc-leg.front { left: 34px; }
-.hc-shadow { position: absolute; left: 4px; right: 4px; bottom: 2px; height: 8px; background: rgba(0,0,0,.25); z-index: 0; }
+.hero-char.walking .mc-limb.a { animation: swingA .45s ease-in-out infinite alternate; }
+.hero-char.walking .mc-limb.b { animation: swingB .45s ease-in-out infinite alternate; }
+@keyframes swingA { from { transform: rotateX(-32deg); } to { transform: rotateX(32deg); } }
+@keyframes swingB { from { transform: rotateX(32deg); } to { transform: rotateX(-32deg); } }
+.hero-char.waving .mc-limb.wave { animation: waveArm .3s ease-in-out infinite alternate; }
+@keyframes waveArm { from { transform: rotateX(-150deg); } to { transform: rotateX(-185deg); } }
+.hc-shadow { position: absolute; left: 8px; right: 8px; bottom: 2px; height: 8px; background: rgba(0,0,0,.25); z-index: 0; }
 
 .hero-char.walking .hc-leg.front, .hero-char.walking .hc-arm.back { animation: swingA .45s ease-in-out infinite alternate; }
 .hero-char.walking .hc-leg.back, .hero-char.walking .hc-arm.front { animation: swingB .45s ease-in-out infinite alternate; }

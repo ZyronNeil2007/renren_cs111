@@ -18,7 +18,7 @@ A static, Minecraft-inspired personal memories website for the CS111 Introductio
 
 | Page | Game | How to play |
 |------|------|-------------|
-| Title | Pixel Pal | Arrow keys / A D walk, Space jumps, click the character; on phones: on-screen ◀ ▶ ▲ buttons and tap the ground |
+| Title | Mark (title screen, real 64x64 skin in 3D) | Arrow keys / A D walk, Space jumps, click the character; on phones: on-screen ◀ ▶ ▲ buttons and tap the ground |
 | Welcome | Mine a Block | Click the block until it breaks; rarer ores take more hits |
 | 1 Childhood Memories | Memory Match | Flip cards to match pairs (uses the chapter photos) |
 | 2 Family & Relatives | Family Echo | Repeat the growing colour pattern (keys 1-4 also work) |
