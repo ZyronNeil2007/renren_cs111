@@ -17,7 +17,7 @@
   var wrap = document.createElement('div');
   wrap.className = 'hc-wrap';
   wrap.innerHTML =
-    '<div class="hero-char" id="hero" role="button" tabindex="0" aria-label="Pixel Pal: tap to say hi">' +
+    '<div class="hero-char" id="hero" role="button" tabindex="0" aria-label="Mark: tap to say hi">' +
       '<div class="hc-bubble" role="status" aria-live="polite"></div>' +
       '<div class="hc-body">' +
         '<div class="hc-arm back"></div><div class="hc-leg back"></div>' +
@@ -56,7 +56,7 @@
   var bubbleW = 0, lastT = '', lastDir = 0, lastWalk = null, lastBx = null;
 
   var lines = [
-    'Hi there!', 'Welcome to my world!', 'Press Play to begin!',
+    'Hi there, I\'m Mark!', 'Welcome to my world!', 'Press Play to begin!',
     'Watch me jump!', 'Nice day for mining.', 'Creeper? Aw man!',
     'I love this place.', 'Try the arrow keys!'
   ];

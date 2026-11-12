@@ -521,25 +521,39 @@ a, button, summary { touch-action: manipulation; }
 .hc-body { position: absolute; inset: 0; }
 .hc-body > div, .hc-head { position: absolute; border: 4px solid #000; }
 .hc-head {
-  left: 8px; top: 0; width: 56px; height: 52px; background: #f0c9a0; z-index: 3;
-  box-shadow: inset 4px 4px 0 rgba(255,255,255,.25), inset -4px -4px 0 rgba(0,0,0,.18);
+  left: 8px; top: 0; width: 56px; height: 52px; background: #f5b689; z-index: 3;
+  box-shadow: inset 4px 4px 0 rgba(255,255,255,.18), inset -4px -4px 0 rgba(0,0,0,.14);
 }
-.hc-head::before { /* yellow beanie */
-  content: ''; position: absolute; left: -4px; right: -4px; top: -4px; height: 18px; background: #f2c230;
-  border: 4px solid #000; box-shadow: inset 0 -4px 0 #d4a31c;
+.hc-head::before { /* messy black hair: cap + side tufts */
+  content: ''; position: absolute; left: -4px; right: -4px; top: -8px; height: 26px; background: #1c191b;
+  border: 4px solid #000; box-shadow: inset 0 -4px 0 #2b2629, inset 6px 6px 0 #342f33;
 }
-.hc-eye { position: absolute; top: 26px; width: 8px; height: 10px; background: #1b1b1b; animation: blinkEye 4s steps(1) infinite; }
+.hc-head::after { /* bangs falling over the forehead */
+  content: ''; position: absolute; left: 0; top: 14px; width: 30px; height: 8px; background: #1c191b;
+  box-shadow: 12px 4px 0 -0px #1c191b;
+}
+.hc-eye { position: absolute; top: 26px; width: 10px; height: 10px; background: linear-gradient(90deg, #fff 50%, #1d1412 50%); animation: blinkEye 4s steps(1) infinite; }
 .hc-eye.l { left: 30px; } .hc-eye.r { left: 12px; }
-.hc-mouth { position: absolute; left: 22px; top: 40px; width: 14px; height: 4px; background: #8a3a3a; }
+.hc-mouth { position: absolute; left: 22px; top: 40px; width: 12px; height: 3px; background: #c9774f; }
 @keyframes blinkEye { 0%, 94%, 100% { height: 10px; } 96% { height: 2px; margin-top: 8px; } }
-.hc-torso { left: 12px; top: 48px; width: 48px; height: 62px; background: #7b3fb0; z-index: 2;
-  box-shadow: inset 4px 4px 0 rgba(255,255,255,.25), inset -4px -4px 0 rgba(0,0,0,.28); }
-.hc-torso::after { content: ''; position: absolute; left: 14px; top: 20px; width: 12px; height: 12px; background: #f2c230; border: 3px solid #000; }
-.hc-arm { top: 50px; width: 18px; height: 58px; background: #f0c9a0; transform-origin: 50% 8px; z-index: 4; box-shadow: inset 0 -16px 0 #7b3fb0; }
+.hc-torso { left: 12px; top: 48px; width: 48px; height: 62px; z-index: 2;
+  background: linear-gradient(#c89a5a, #c89a5a) 28px 10px / 8px 8px no-repeat, #3c2c2a;
+  box-shadow: inset 4px 4px 0 rgba(255,255,255,.12), inset -4px -4px 0 rgba(0,0,0,.3); }
+.hc-torso::before { /* collar / neck */
+  content: ''; position: absolute; left: 14px; top: -4px; width: 12px; height: 6px; background: #e5a478;
+}
+.hc-torso::after { /* "ATHLETIC" lettering + star badge */
+  content: ''; position: absolute; left: 4px; top: 26px; width: 32px; height: 8px;
+  background: repeating-linear-gradient(90deg, #f4e8d8 0 3px, transparent 3px 4px);
+}
+.hc-arm { top: 50px; width: 18px; height: 58px; background: linear-gradient(#3c2c2a 0 38%, #f5b689 38%); transform-origin: 50% 8px; z-index: 4; }
+.hc-arm.front::after { /* black wristband */
+  content: ''; position: absolute; left: -4px; right: -4px; top: 60%; height: 10px; background: #2f2b2f; border-top: 3px solid #000; border-bottom: 3px solid #000;
+}
 .hc-arm.back { left: 0; z-index: 1; filter: brightness(.85); }
 .hc-arm.front { left: 54px; }
-.hc-leg { top: 108px; width: 22px; height: 50px; background: #4a4a5c; transform-origin: 50% 0; z-index: 1;
-  box-shadow: inset 0 -12px 0 #c0392b; }
+.hc-leg { top: 108px; width: 22px; height: 50px; transform-origin: 50% 0; z-index: 1;
+  background: linear-gradient(#c4b6b4 0 66%, #aa9e9e 66% 70%, #f0e6de 70% 88%, #464146 88%); }
 .hc-leg.back { left: 14px; filter: brightness(.85); }
 .hc-leg.front { left: 34px; }
 .hc-shadow { position: absolute; left: 4px; right: 4px; bottom: 2px; height: 8px; background: rgba(0,0,0,.25); z-index: 0; }
