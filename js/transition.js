@@ -21,7 +21,7 @@
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   };
   var checker = function (c, c2) {
-    return 'conic-gradient(' + c + ' 25%, ' + c2 + ' 0 50%, ' + c + ' 0 75%, ' + c2 + ' 0) 0 0 / 32px 32px';
+    return 'conic-gradient(' + c + ' 25%, ' + c2 + ' 0 50%, ' + c + ' 0 75%, ' + c2 + ' 0) 0 0 / 64px 64px';
   };
   var inset = function (t, r, b, l) {
     return 'inset(' + t + 'px ' + r + 'px ' + b + 'px ' + l + 'px)';

@@ -717,7 +717,7 @@
       return ORES[0];
     }
     function show() {
-      block.style.background = 'conic-gradient(' + ore.c + ' 25%, ' + ore.c2 + ' 0 50%, ' + ore.c + ' 0 75%, ' + ore.c2 + ' 0) 0 0 / 28px 28px';
+      block.style.background = 'conic-gradient(' + ore.c + ' 25%, ' + ore.c2 + ' 0 50%, ' + ore.c + ' 0 75%, ' + ore.c2 + ' 0) 0 0 / 64px 64px';
       block.textContent = ore.name.toUpperCase();
       fill.style.width = (hits / ore.hits * 100) + '%';
       info.textContent = 'Mining ' + ore.name + ': ' + hits + ' / ' + ore.hits + ' hits';
