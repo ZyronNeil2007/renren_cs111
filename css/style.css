@@ -157,6 +157,13 @@ a, button, summary { touch-action: manipulation; }
 }
 .topbar-title { font-family: var(--font-title); font-size: 12px; color: #ddd; text-shadow: 2px 2px 0 #000; }
 
+/* In-game Minecraft name tag: white text with a drop shadow on a translucent dark box */
+.nametag {
+  margin-left: auto; padding: 4px 8px;
+  background: rgba(0, 0, 0, .35);
+}
+.nametag-text { font-family: var(--font-title); font-size: 12px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
+
 .hub-head { margin-bottom: 30px; text-align: center; }
 .hub-head h1 { font-size: clamp(18px, 4vw, 30px); color: #2a2a2a; margin-bottom: 14px; }
 .hub-head p { margin: 0; font-size: 25px; }
@@ -560,8 +567,18 @@ a, button, summary { touch-action: manipulation; }
 .hero-char.waving .hc-arm.front { animation: waveArm .3s ease-in-out infinite alternate; }
 @keyframes waveArm { from { transform: rotate(150deg); } to { transform: rotate(190deg); } }
 
+/* Floating in-game name tag above the head (white text on a translucent dark box),
+   counter-scaled so it stays a constant size when the character shrinks. */
+.hc-nametag {
+  position: absolute; left: 50%; bottom: 176px; z-index: 9; white-space: nowrap;
+  translate: -50% 0; scale: calc(1 / var(--hs, 1)); transform-origin: 50% 100%;
+  padding: 4px 8px; background: rgba(0, 0, 0, .35);
+  pointer-events: none;
+}
+.hc-nametag span { font-family: var(--font-title); font-size: 11px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
+
 .hc-bubble {
-  position: absolute; left: 50%; bottom: 170px; white-space: nowrap; z-index: 10;
+  position: absolute; left: 50%; bottom: 212px; white-space: nowrap; z-index: 10;
   translate: calc(-50% + var(--bx, 0px)) 0; scale: calc(1 / var(--hs, 1)); transform-origin: 50% 100%;
   max-width: calc(100vw - 16px);
   padding: 8px 14px; font-family: var(--font-title); font-size: 11px; color: #222; background: #fff;

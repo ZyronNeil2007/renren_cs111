@@ -19,6 +19,7 @@
   wrap.innerHTML =
     '<div class="hero-char" id="hero" role="button" tabindex="0" aria-label="Mark: tap to say hi">' +
       '<div class="hc-bubble" role="status" aria-live="polite"></div>' +
+      '<div class="hc-nametag" aria-hidden="true"><span>renren</span></div>' +
       '<div class="hc-body"></div>' +
       '<div class="hc-shadow"></div>' +
     '</div>';
