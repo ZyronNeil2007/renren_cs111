@@ -170,21 +170,35 @@ a, button, summary { touch-action: manipulation; }
   transition: transform .15s ease-out;
 }
 .block:hover, .block:focus-visible { --ty: -8px; }
+/* Minecraft item frame: oak-wood border around a recessed backing that
+   holds the chapter icon like an item. The backing keeps the chapter colour. */
 .block .face {
   position: relative; overflow: hidden;
   aspect-ratio: 1; display: grid; place-items: center;
   border: 4px solid #000;
-  background: conic-gradient(var(--c) 25%, var(--c2) 0 50%, var(--c) 0 75%, var(--c2) 0) 0 0 / 32px 32px;
-  box-shadow: inset 6px 6px 0 rgba(255,255,255,.28), inset -6px -6px 0 rgba(0,0,0,.32), 0 10px 0 rgba(0,0,0,.35);
+  background: conic-gradient(#a87a45 25%, #94683a 0 50%, #a87a45 0 75%, #94683a 0) 0 0 / 16px 16px;
+  box-shadow: inset 4px 4px 0 #c99a5e, inset -4px -4px 0 #6b4521, 0 10px 0 rgba(0,0,0,.35);
 }
-.block .face::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(transparent 55%, rgba(0,0,0,.28));
+.block .face::before {          /* the recessed backing inside the wooden frame */
+  content: ''; position: absolute; inset: 14px;
+  border: 4px solid #3b2610;
+  background:
+    linear-gradient(transparent 55%, rgba(0,0,0,.22)),
+    conic-gradient(var(--c) 25%, var(--c2) 0 50%, var(--c) 0 75%, var(--c2) 0) 0 0 / 32px 32px;
+  box-shadow: inset 5px 5px 0 rgba(0,0,0,.4), inset -3px -3px 0 rgba(255,255,255,.18);
+}
+.block .face::after {           /* corner pegs where the frame meets the wall */
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(#3b2610, #3b2610) 6px 6px / 6px 6px no-repeat,
+    linear-gradient(#3b2610, #3b2610) calc(100% - 6px) 6px / 6px 6px no-repeat,
+    linear-gradient(#3b2610, #3b2610) 6px calc(100% - 6px) / 6px 6px no-repeat,
+    linear-gradient(#3b2610, #3b2610) calc(100% - 6px) calc(100% - 6px) / 6px 6px no-repeat;
 }
 .block .icon { font-size: var(--icon-lg); z-index: 1; filter: drop-shadow(4px 4px 0 rgba(0,0,0,.55)); transition: transform .2s; }
 .block:hover .icon, .block:focus-visible .icon { transform: scale(1.22) rotate(-7deg); }
 .block .num {
-  position: absolute; top: 8px; left: 10px; z-index: 2;
+  position: absolute; top: 22px; left: 22px; z-index: 2;
   font-family: var(--font-title); font-size: 12px; text-shadow: 2px 2px 0 #000;
   background: rgba(0,0,0,.5); padding: 4px 7px;
 }
@@ -382,6 +396,8 @@ a, button, summary { touch-action: manipulation; }
   .dish summary img { width: 100%; height: 170px; }
   .posters { grid-template-columns: repeat(2, 1fr); }
   .block .icon { font-size: 52px; }
+  .block .face::before { inset: 10px; }
+  .block .num { top: 16px; left: 16px; }
   .hero-icon { font-size: 56px; }
   .block .label strong { font-size: 10px; }
   .mc-btn { font-size: 10px; padding: 12px 14px; }
