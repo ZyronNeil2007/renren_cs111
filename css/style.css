@@ -2,9 +2,15 @@
    LIFE CRAFT — Minecraft-themed memory book
    ========================================================== */
 
+@font-face {
+  font-family: 'Minecraft';
+  src: url('../assets/fonts/minecraft.woff2') format('woff2');
+  font-display: swap;
+}
+
 :root {
-  --font-title: 'Press Start 2P', 'Courier New', monospace;
-  --font-body: 'VT323', 'Courier New', monospace;
+  --font-title: 'Minecraft', 'Courier New', monospace;
+  --font-body: 'Minecraft', 'Courier New', monospace;
   --c: #5d9b3a;
   --c2: #4a7f2d;
   --gui: #c6c6c6;
@@ -48,7 +54,7 @@ a, button, summary { touch-action: manipulation; }
 .mc-btn {
   display: inline-block;
   font-family: var(--font-title);
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.4;
   color: #fff;
   text-decoration: none;
@@ -66,7 +72,7 @@ a, button, summary { touch-action: manipulation; }
   box-shadow: inset 4px 4px 0 #a3b0ee, inset -4px -4px 0 #3c477f;
 }
 .mc-btn:active { transform: translateY(3px); }
-.mc-btn.big { font-size: 18px; padding: 22px 48px; }
+.mc-btn.big { font-size: 24px; padding: 22px 48px; }
 .mc-btn[disabled] { opacity: .45; cursor: not-allowed; }
 
 .panel {
@@ -162,7 +168,7 @@ a, button, summary { touch-action: manipulation; }
   margin-left: auto; padding: 4px 8px;
   background: rgba(0, 0, 0, .35);
 }
-.nametag-text { font-family: var(--font-title); font-size: 12px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
+.nametag-text { font-family: var(--font-title); font-size: 16px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
 
 .hub-head { margin-bottom: 30px; text-align: center; }
 .hub-head h1 { font-size: clamp(18px, 4vw, 30px); color: #2a2a2a; margin-bottom: 14px; }
@@ -214,7 +220,7 @@ a, button, summary { touch-action: manipulation; }
   background: #3b3b3b; border: 4px solid #000;
   box-shadow: inset 3px 3px 0 #5a5a5a, inset -3px -3px 0 #222;
 }
-.block .label strong { display: block; font-family: var(--font-title); font-weight: 400; font-size: 12px; line-height: 1.6; text-shadow: 2px 2px 0 #000; }
+.block .label strong { display: block; font-family: var(--font-title); font-weight: 400; font-size: 16px; line-height: 1.6; text-shadow: 2px 2px 0 #000; }
 .block .label small { display: block; font-size: 20px; color: #e2e2e2; margin-top: 4px; }
 .block:hover .label, .block:focus-visible .label { background: #4b5688; }
 .block.is-morphing { visibility: hidden; }
@@ -406,8 +412,8 @@ a, button, summary { touch-action: manipulation; }
   .block .face::before { inset: 10px; }
   .block .num { top: 16px; left: 16px; }
   .hero-icon { font-size: 56px; }
-  .block .label strong { font-size: 10px; }
-  .mc-btn { font-size: 10px; padding: 12px 14px; }
+  .block .label strong { font-size: 13px; }
+  .mc-btn { font-size: 13px; padding: 12px 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -575,7 +581,7 @@ a, button, summary { touch-action: manipulation; }
   padding: 4px 8px; background: rgba(0, 0, 0, .35);
   pointer-events: none;
 }
-.hc-nametag span { font-family: var(--font-title); font-size: 11px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
+.hc-nametag span { font-family: var(--font-title); font-size: 14px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
 
 .hc-bubble {
   position: absolute; left: 50%; bottom: 212px; white-space: nowrap; z-index: 10;
