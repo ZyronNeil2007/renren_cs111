@@ -89,7 +89,7 @@ body[data-biome='jungle'] .layer-sky::after {          /* light shafts through t
 }
 
 /* ---------- small screens: simpler scene (fewer layers, no pointer parallax) ---------- */
-@media (max-width: 700px) { .layer-far { display: none; } }
+@media (max-width: 700px) { .scene .layer-far { display: none; } }   /* chapter scenes only: the title screen keeps its mountains */
 
 /* ==========================================================
    DIORAMA: the same layers, miniaturised (chapter banners, Plains preview)
@@ -144,3 +144,18 @@ body[data-biome] .hero h1, body[data-biome] .hero p { background: rgba(8,8,12,.7
 
 /* phones: the speech bubble + on-screen buttons already explain the controls, so the hint would collide with them */
 @media (max-width: 560px) { .title-body .hint { display: none; } }
+
+/* title screen on portrait phones: same mountains / forest / village as desktop, just a touch smaller */
+@media (max-width: 560px) { .title-body { --sc: .7; } }
+
+/* portrait phones: stack the title from the top so the Play sign stays well above the standing character */
+@media (max-width: 560px) {
+  .title-body .title-main { justify-content: flex-start; gap: 10px; padding-top: max(14px, 3vh); }
+}
+@media (max-width: 560px) and (max-height: 700px) {
+  .title-body .title-main { gap: 6px; padding-top: 8px; }
+}
+@media (max-width: 340px) {
+  .title-body .play { font-size: 13px; padding: 14px 16px; white-space: nowrap; }
+  .title-body .splash { display: none; }
+}
