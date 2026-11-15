@@ -148,6 +148,11 @@ a, button, summary { touch-action: manipulation; }
 }
 @keyframes pulse { to { transform: rotate(-6deg) scale(1.1); } }
 .hint { font-size: 20px; color: #1c3d66; margin: 8px 0 0; text-shadow: 1px 1px 0 rgba(255,255,255,.6); }
+.title-ver {
+  position: fixed; left: 6px; bottom: 6px; z-index: 4; margin: 0;
+  font-family: var(--font-title); font-size: 10px; color: #fff;
+  text-shadow: 2px 2px 0 #000; pointer-events: none;
+}
 
 /* ==========================================================
    HUB (welcome.html)
