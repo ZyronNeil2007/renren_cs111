@@ -611,7 +611,6 @@ a, button, summary { touch-action: manipulation; }
 .hc-body { position: absolute; inset: 0; perspective: 700px; perspective-origin: 50% 35%; }
 .mc-model { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(var(--ry, 0deg)); transition: transform .28s ease-out; }
 .mc-part, .mc-box { position: absolute; transform-style: preserve-3d; }
-.mc-head { transform-origin: 50% 50%; transform: rotateX(var(--head-pitch, 0deg)) rotateY(var(--head-yaw, 0deg)); }
 .mc-limb { transform-origin: 50% 0; }
 /* Head tracking (js/headtrack.js) turns only this part; the pivot is the neck. No transform at rest. */
 .mc-head { transform-origin: 50% 100% 0; }
@@ -620,3 +619,137 @@ a, button, summary { touch-action: manipulation; }
   background-image: url(../skins/mark.png); background-repeat: no-repeat;
   image-rendering: pixelated;
 }
+.hero-char.walking .mc-limb.a { animation: swingA .45s ease-in-out infinite alternate; }
+.hero-char.walking .mc-limb.b { animation: swingB .45s ease-in-out infinite alternate; }
+@keyframes swingA { from { transform: rotateX(-32deg); } to { transform: rotateX(32deg); } }
+@keyframes swingB { from { transform: rotateX(32deg); } to { transform: rotateX(-32deg); } }
+.hero-char.waving .mc-limb.wave { animation: waveArm .3s ease-in-out infinite alternate; }
+@keyframes waveArm { from { transform: rotateX(-150deg); } to { transform: rotateX(-185deg); } }
+.hc-shadow { position: absolute; left: 8px; right: 8px; bottom: 2px; height: 8px; background: rgba(0,0,0,.25); z-index: 0; }
+
+.hero-char.walking .hc-leg.front, .hero-char.walking .hc-arm.back { animation: swingA .45s ease-in-out infinite alternate; }
+.hero-char.walking .hc-leg.back, .hero-char.walking .hc-arm.front { animation: swingB .45s ease-in-out infinite alternate; }
+@keyframes swingA { from { transform: rotate(-28deg); } to { transform: rotate(28deg); } }
+@keyframes swingB { from { transform: rotate(28deg); } to { transform: rotate(-28deg); } }
+.hero-char.waving .hc-arm.front { animation: waveArm .3s ease-in-out infinite alternate; }
+@keyframes waveArm { from { transform: rotate(150deg); } to { transform: rotate(190deg); } }
+
+/* Floating in-game name tag above the head (white text on a translucent dark box),
+   counter-scaled so it stays a constant size when the character shrinks. */
+.hc-nametag {
+  position: absolute; left: 50%; bottom: 176px; z-index: 9; white-space: nowrap;
+  translate: -50% 0; scale: calc(1 / var(--hs, 1)); transform-origin: 50% 100%;
+  padding: 4px 8px; background: rgba(0, 0, 0, .35);
+  pointer-events: none;
+}
+.hc-nametag span { font-family: var(--font-title); font-size: 14px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; }
+
+.hc-bubble {
+  position: absolute; left: 50%; bottom: 212px; white-space: nowrap; z-index: 10;
+  translate: calc(-50% + var(--bx, 0px)) 0; scale: calc(1 / var(--hs, 1)); transform-origin: 50% 100%;
+  max-width: calc(100vw - 16px);
+  padding: 8px 14px; font-family: var(--font-title); font-size: 11px; color: #222; background: #fff;
+  border: 4px solid #000; opacity: 0; transition: opacity .15s; pointer-events: none;
+}
+.hc-bubble::after { content: ''; position: absolute; left: calc(50% - 6px - var(--bx, 0px) * var(--hs, 1)); bottom: -14px; width: 8px; height: 8px; background: #fff; border: 4px solid #000; border-top: 0; border-left: 0; transform: rotate(45deg); }
+.hc-bubble.show { opacity: 1; }
+.hero-char:focus-visible { outline-color: #1b1b1b; }
+
+@media (max-width: 560px) { .hc-bubble { font-size: 10px; padding: 6px 10px; } }
+
+/* ==========================================================
+   GAME ADDITIONS (used by js/games.js)
+   ========================================================== */
+.px-creeper { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%208%208%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%200h8v1h-8zM0%201h8v1h-8zM0%202h1v1h-1zM3%202h2v1h-2zM7%202h1v1h-1zM0%203h1v1h-1zM3%203h2v1h-2zM7%203h1v1h-1zM0%204h3v1h-3zM5%204h3v1h-3zM0%205h2v1h-2zM6%205h2v1h-2zM0%206h2v1h-2zM6%206h2v1h-2zM0%207h2v1h-2zM3%207h2v1h-2zM6%207h2v1h-2z%27%2F%3E%3C%2Fsvg%3E"); }
+
+.game-area { margin-top: 4px; }
+.game-stat b { color: #ffff55; font-weight: 400; }
+.game .mc-btn[aria-pressed="true"] { background: #2f7a2f; box-shadow: inset 4px 4px 0 #6fd36f, inset -4px -4px 0 #174517; }
+.game-sub { overflow-wrap: anywhere; }
+
+/* Memory */
+.mem-card .mem-front .px { font-size: 44px; color: #6fd36f; }
+.mem-card .mem-back { overflow: hidden; }
+.mem-card .mem-back img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Simon */
+.pad { color: #fff; font-size: 26px; text-shadow: 2px 2px 0 #000; cursor: pointer; }
+.pad[aria-disabled="true"] { cursor: default; }
+/* Dim only the colour (not the label) so the text stays readable */
+@supports (background: color-mix(in srgb, red, blue)) {
+  .pad { filter: none; background: color-mix(in srgb, var(--pc) 52%, #000); }
+  .pad.lit { background: var(--pc); filter: brightness(1.25); }
+}
+
+/* Torches */
+.hole { font-size: 0; }
+
+/* Hearts */
+.faller .px { font-size: 40px; }
+.fall-area { touch-action: manipulation; }
+
+/* Cook */
+.step-btn.shake { color: #fff; }
+
+/* Quiz */
+.quiz .mc-btn { justify-self: start; margin-top: 6px; }
+
+/* Beat tapper */
+.beat-tap { display: block; width: 100%; max-width: 420px; }
+
+/* Tic-tac-toe */
+.ttt .cell.win { background: #2f7a2f; }
+
+@media (max-width: 560px) {
+  .mem-board { gap: 8px; }
+  .mem-card .mem-front .px { font-size: 30px; }
+  .pad { height: 90px; font-size: 20px; }
+  .ttt { grid-template-columns: repeat(3, 84px); }
+  .ttt .cell { height: 84px; }
+}
+
+/* ==========================================================
+   MOBILE: TITLE SCREEN
+   ========================================================== */
+.title-body {
+  overscroll-behavior: none;              /* no pull-to-refresh / rubber-band while playing */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none;
+  touch-action: manipulation;             /* no double-tap zoom delay */
+}
+.hint-touch { display: none; }
+
+/* On-screen controls (touch devices only) */
+.hc-pad {
+  display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  justify-content: space-between; align-items: flex-end; pointer-events: none;
+  padding: 0 max(14px, env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+}
+.hc-pad .grp { display: flex; gap: 12px; }
+.hc-pad button {
+  pointer-events: auto; width: 68px; height: 68px; padding: 0; font-size: 24px;
+  touch-action: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
+}
+.hc-pad button.on { transform: translateY(3px); background: #6f7fc4; box-shadow: inset 4px 4px 0 #a3b0ee, inset -4px -4px 0 #3c477f; }
+@media (pointer: coarse) {
+  .hc-pad { display: flex; }
+  .hint-kb { display: none; }
+  .hint-touch { display: inline; }
+  .title-body .hint:not(:last-of-type) { display: none; }   /* hide "Press Enter" on phones */
+}
+
+/* Short portrait phones: the buttons explain themselves, free the space */
+@media (max-height: 700px) { .title-body .hint { display: none; } }
+
+/* Short screens (phones in landscape): compact title so Play is always reachable */
+@media (max-height: 520px) {
+  :root { --ground-h: 84px; }
+  .title-main { gap: 8px; padding: 10px 24px calc(var(--ground-h) + 8px); }
+  .logo { flex-direction: row; gap: .35em; font-size: min(11vh, 9vw); letter-spacing: 2px;
+          text-shadow: 3px 3px 0 #3b3b3b, 5px 5px 0 #000; }
+  .edition, .splash { font-size: 10px; margin: 0; }
+  .mc-btn.big { padding: 14px 32px; font-size: 14px; }
+  .title-body .hint { display: none; }
+  .hc-pad button { width: 56px; height: 56px; font-size: 20px; }
+}
+@media (max-height: 520px) and (min-width: 700px) { .logo { font-size: min(12vh, 7vw); } }
