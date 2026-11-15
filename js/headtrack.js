@@ -59,7 +59,7 @@
     if (!tracking || !enabled) return null;
     var s = C.state();
     var hx = s.x + 40 * s.S;                         // head centre (the head box is 8x8 texels at 5px)
-    var hy = baseBottom - s.y - 140 * s.S;
+    var hy = baseBottom - s.y - (140 - (s.drop || 0)) * s.S;       // the head sits lower while crouching
     var rx = Math.max(240, Math.min(520, window.innerWidth * 0.45));
     var ry = Math.max(220, Math.min(420, window.innerHeight * 0.55));
     var dx = px - hx, dy = py - hy;

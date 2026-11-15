@@ -34,6 +34,7 @@
       '<button type="button" class="mc-btn" data-k="right" aria-label="Walk right">&#9654;</button>' +
     '</div>' +
     '<div class="grp">' +
+      '<button type="button" class="mc-btn" data-k="down" aria-label="Crouch (hold)">&#9660;</button>' +
       '<button type="button" class="mc-btn" data-k="jump" aria-label="Jump">&#9650;</button>' +
     '</div>';
   document.body.appendChild(pad);
@@ -51,13 +52,16 @@
   var target = null, keys = {}, bubbleTimer = 0, waveTimer = 0, hops = 0;
   var bubbleW = 0, lastT = '', lastDir = 0, lastWalk = null, lastBx = null;
   var bodyRy = 25;           // current body yaw in degrees (idle 3/4 view, or +-90 while walking)
+  var crouching = false, lastCrouch = null;   // sneak: hold the down arrow / S / the pad's down button
+  var SNEAK_SPEED = 0.35;    // Minecraft sneaks at about a third of walking speed
+  var SNEAK_DROP = 21;       // how far the head drops in the sneak pose (px at scale 1)
 
   var lines = [
     'Hi there, I\'m Mark!', 'Welcome to my world!', 'Press Play to begin!',
     'Watch me jump!', 'Nice day for mining.', 'Creeper? Aw man!',
-    'I love this place.', 'Try the arrow keys!'
+    'I love this place.', 'Try the arrow keys!', 'Hold the down arrow to sneak!'
   ];
-  var touchLines = lines.slice(0, 7).concat(['Use the buttons below!']);
+  var touchLines = lines.slice(0, 7).concat(['Use the buttons below!', 'Hold the down button to sneak!']);
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
 
@@ -103,11 +107,11 @@
     return p;
   }
   var model = document.createElement('div'); model.className = 'mc-model';
-  model.appendChild(part('mc-limb b', 4, 20, 4, 12, [box(4, 12, 4, 0, 16)]));              // right leg
-  model.appendChild(part('mc-limb a', 8, 20, 4, 12, [box(4, 12, 4, 16, 48)]));             // left leg
-  model.appendChild(part('', 4, 8, 8, 12, [box(8, 12, 4, 16, 16)]));                       // body
-  model.appendChild(part('mc-limb a', 0, 8, 4, 12, [box(4, 12, 4, 40, 16)]));              // right arm
-  var armL = part('mc-limb b wave', 12, 8, 4, 12, [box(4, 12, 4, 32, 48)]);               // left arm (wristband, waves)
+  model.appendChild(part('mc-limb mc-leg b', 4, 20, 4, 12, [box(4, 12, 4, 0, 16)]));              // right leg
+  model.appendChild(part('mc-limb mc-leg a', 8, 20, 4, 12, [box(4, 12, 4, 16, 48)]));             // left leg
+  model.appendChild(part('mc-body', 4, 8, 8, 12, [box(8, 12, 4, 16, 16)]));                       // body
+  model.appendChild(part('mc-limb mc-arm a', 0, 8, 4, 12, [box(4, 12, 4, 40, 16)]));              // right arm
+  var armL = part('mc-limb mc-arm b wave', 12, 8, 4, 12, [box(4, 12, 4, 32, 48)]);               // left arm (wristband, waves)
   model.appendChild(armL);
   var headPart = part('mc-head', 4, 0, 8, 8, [box(8, 8, 8, 0, 0), box(8, 8, 8, 32, 0, 1)]);  // head + hair layer
   model.appendChild(headPart);
@@ -117,7 +121,7 @@
    * character's position/scale/body yaw, and a hook that fires when any of those change. */
   var api = window.MCHero = {
     el: hero, model: model, head: headPart, onChange: null,
-    state: function () { return { x: x, y: y, S: S, ry: bodyRy }; }
+    state: function () { return { x: x, y: y, S: S, ry: bodyRy, drop: crouching ? SNEAK_DROP : 0 }; }
   };
   function changed() { if (api.onChange) api.onChange(); }
 
@@ -169,12 +173,15 @@
     if (k === 'arrowleft' || k === 'a') { keys.left = true; target = null; e.preventDefault(); }
     else if (k === 'arrowright' || k === 'd') { keys.right = true; target = null; e.preventDefault(); }
     else if (k === 'arrowup' || k === 'w' || (k === ' ' && document.activeElement === document.body)) { jump(); e.preventDefault(); }
+    else if (k === 'arrowdown' || k === 's') { keys.down = true; e.preventDefault(); }
   });
   document.addEventListener('keyup', function (e) {
     var k = e.key.toLowerCase();
     if (k === 'arrowleft' || k === 'a') keys.left = false;
     if (k === 'arrowright' || k === 'd') keys.right = false;
+    if (k === 'arrowdown' || k === 's') keys.down = false;
   });
+  window.addEventListener('blur', function () { keys = {}; });      // a key released while the window was away
 
   /* ---------------------------------------------------------- touch pad
    * Pointer events give hold-to-walk and multi-touch (walk + jump together). */
@@ -198,6 +205,7 @@
     btn.addEventListener('click', function (e) {
       if (e.detail !== 0) return;
       if (k === 'jump') jump();
+      else if (k === 'down') { keys.down = true; setTimeout(function () { keys.down = false; }, 800); }
       else target = Math.max(0, Math.min(vw - W, x + (k === 'left' ? -90 : 90)));
     });
   });
@@ -223,7 +231,8 @@
     }
     if (keys.jump) jump();                            // hold the jump button to keep hopping
 
-    if (move) { x += move * 4.2 * dt * S; dir = move; }
+    crouching = !!keys.down;
+    if (move) { x += move * 4.2 * dt * S * (crouching ? SNEAK_SPEED : 1); dir = move; }
     x = Math.max(0, Math.min(vw - W, x));
 
     if (y > 0 || vy > 0) {
@@ -233,6 +242,7 @@
 
     var t = 'translate(' + x.toFixed(1) + 'px,' + (-y).toFixed(1) + 'px) scale(' + S + ')';
     if (t !== lastT) { hero.style.transform = t; lastT = t; changed(); }
+    if (crouching !== lastCrouch) { hero.classList.toggle('crouching', crouching); lastCrouch = crouching; changed(); }
     var walking = !!move && y === 0;
     if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; lastDir = 0; }
     // walking = side view in the travel direction; idle = turn toward the viewer (3/4 view)
