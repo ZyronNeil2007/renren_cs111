@@ -614,6 +614,22 @@ a, button, summary { touch-action: manipulation; }
 .mc-limb { transform-origin: 50% 0; }
 /* Head tracking (js/headtrack.js) turns only this part; the pivot is the neck. No transform at rest. */
 .mc-head { transform-origin: 50% 100% 0; }
+
+/* Crouch / sneak (hold the down arrow, S, or the pad's down button).
+   Minecraft's own sneak pose, applied part by part with the individual translate / rotate
+   properties so it stacks with the walk swing, the wave and head tracking (which use transform):
+   body drops 3.2 and leans 0.5 rad about the shoulders, arms drop 3.2 and follow the lean
+   (0.4 rad), hips/legs shift back 4 and down 0.2, head drops 4.2. 1 model unit = 5px. */
+.mc-body { transform-origin: 50% 0; }
+.mc-head, .mc-body, .mc-limb { transition: translate .14s ease-out, rotate .14s ease-out; }
+.hero-char.crouching .mc-body { translate: 0 16px; rotate: x -28.6deg; }
+.hero-char.crouching .mc-arm  { translate: 0 16px; rotate: x -22.9deg; }
+.hero-char.crouching .mc-leg  { translate: 0 1px -20px; }
+.hero-char.crouching .mc-head { translate: 0 21px; }
+.hero-char.crouching.walking .mc-limb.a, .hero-char.crouching.walking .mc-limb.b { animation-duration: 1.2s; }   /* slower steps while sneaking */
+.hero-char.crouching .hc-nametag { bottom: 160px; }                           /* the tag sinks with the head */
+.hero-char.crouching .hc-bubble { bottom: 196px; }
+@media (prefers-reduced-motion: reduce) { .mc-head, .mc-body, .mc-limb { transition: none; } }
 .mc-face {
   position: absolute; backface-visibility: hidden;
   background-image: url(../skins/mark.png); background-repeat: no-repeat;
@@ -731,6 +747,10 @@ a, button, summary { touch-action: manipulation; }
   touch-action: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none;
 }
 .hc-pad button.on { transform: translateY(3px); background: #6f7fc4; box-shadow: inset 4px 4px 0 #a3b0ee, inset -4px -4px 0 #3c477f; }
+@media (max-width: 360px) {
+  .hc-pad button { width: 58px; height: 58px; }
+  .hc-pad .grp { gap: 8px; }
+}
 @media (pointer: coarse) {
   .hc-pad { display: flex; }
   .hint-kb { display: none; }
