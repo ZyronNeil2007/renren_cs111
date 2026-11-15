@@ -611,6 +611,7 @@ a, button, summary { touch-action: manipulation; }
 .hc-body { position: absolute; inset: 0; perspective: 700px; perspective-origin: 50% 35%; }
 .mc-model { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(var(--ry, 0deg)); transition: transform .28s ease-out; }
 .mc-part, .mc-box { position: absolute; transform-style: preserve-3d; }
+.mc-head { transform-origin: 50% 50%; transform: rotateX(var(--head-pitch, 0deg)) rotateY(var(--head-yaw, 0deg)); }
 .mc-limb { transform-origin: 50% 0; }
 .mc-face {
   position: absolute; backface-visibility: hidden;
