@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>My Friends · Life Craft</title>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/biomes.css">
   <script src="../js/transition.js"></script>
 </head>
-<body data-biome="ocean" style="--c:#3fd0c9; --c2:#2aa8a2;">
+<body data-biome="jungle" data-sway data-hang style="--c:#2f9f3a; --c2:#238a2f;">
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <a class="mc-btn" data-morph href="welcome.html" style="--c:#7d7d7d; --c2:#6b6b6b;">&#9664; World</a>
-    <span class="topbar-title">CHAPTER 3 / 8 &middot; <span class="biome">WARM OCEAN</span></span>
+    <a class="mc-btn" data-morph data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664; World</a>
+    <span class="topbar-title">CHAPTER 3 / 8 &middot; <span class="biome">JUNGLE</span></span>
   </header>
 
   <main id="main" class="wrap">
@@ -54,10 +55,12 @@
     </section>
 
     <nav class="pager">
-      <a class="mc-btn" data-morph href="family_relatives.html" style="--c:#b8945f; --c2:#9c7a49;">&#9664; Family</a>
-      <a class="mc-btn" data-morph href="me_and_my_love.html" style="--c:#c62828; --c2:#9e1f1f;">Me &amp; My Love &#9654;</a>
+      <a class="mc-btn" data-morph data-world="the Lush Caves" href="family_relatives.html" style="--c:#6b8e3a; --c2:#58792e;">&#9664; Family</a>
+      <a class="mc-btn" data-morph data-world="the Warm Ocean" href="me_and_my_love.html" style="--c:#1fa3c9; --c2:#1a8fb2;">Me &amp; My Love &#9654;</a>
     </nav>
   </main>
+
+  <footer class="foot">You are exploring the <b>Jungle</b> &middot; chapter 3 of 8</footer>
 
   <script src="../js/lightbox.js"></script>
   <script src="../js/games.js"></script>

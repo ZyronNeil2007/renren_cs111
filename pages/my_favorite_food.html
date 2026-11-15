@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>My Favorite Food · Life Craft</title>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/biomes.css">
   <script src="../js/transition.js"></script>
 </head>
-<body data-biome="desert" style="--c:#e08a1e; --c2:#c0701a;">
+<body data-biome="badlands" style="--c:#c4572f; --c2:#a8482a;">
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <a class="mc-btn" data-morph href="welcome.html" style="--c:#7d7d7d; --c2:#6b6b6b;">&#9664; World</a>
-    <span class="topbar-title">CHAPTER 5 / 8 &middot; <span class="biome">DESERT</span></span>
+    <a class="mc-btn" data-morph data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664; World</a>
+    <span class="topbar-title">CHAPTER 5 / 8 &middot; <span class="biome">BADLANDS</span></span>
   </header>
 
   <main id="main" class="wrap">
@@ -207,10 +208,12 @@
     </section>
 
     <nav class="pager">
-      <a class="mc-btn" data-morph href="me_and_my_love.html" style="--c:#c62828; --c2:#9e1f1f;">&#9664; Me &amp; My Love</a>
-      <a class="mc-btn" data-morph href="my_favorite_movie.html" style="--c:#5b2a86; --c2:#3f1d61;">Movies &#9654;</a>
+      <a class="mc-btn" data-morph data-world="the Warm Ocean" href="me_and_my_love.html" style="--c:#1fa3c9; --c2:#1a8fb2;">&#9664; Me &amp; My Love</a>
+      <a class="mc-btn" data-morph data-world="the End" href="my_favorite_movie.html" style="--c:#4a2a7a; --c2:#2f1a52;">Movies &#9654;</a>
     </nav>
   </main>
+
+  <footer class="foot">You are exploring the <b>Badlands</b> &middot; chapter 5 of 8</footer>
 
   <script src="../js/pages.js"></script>
   <script src="../js/games.js"></script>
