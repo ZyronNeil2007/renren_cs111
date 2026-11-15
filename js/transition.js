@@ -54,7 +54,8 @@
     m.setAttribute('aria-hidden', 'true');
     m.innerHTML =
       '<div class="morph-edge"></div>' +
-      '<div class="morph-fill"><span class="morph-label">Loading terrain&hellip;</span></div>';
+      '<div class="morph-fill"><span class="morph-label"></span></div>';
+    m.querySelector('.morph-label').textContent = el.getAttribute('data-world') ? 'Travelling to ' + el.getAttribute('data-world') + '\u2026' : 'Loading terrain\u2026';
     var edge = m.querySelector('.morph-edge');
     var fill = m.querySelector('.morph-fill');
     fill.style.background = checker(c, c2);
