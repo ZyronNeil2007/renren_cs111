@@ -157,6 +157,44 @@
     say(pool[Math.floor(Math.random() * pool.length)]);
   }
 
+  /* ---------------------------------------------------------- head tracking */
+  var headYaw = 0, headPitch = 0, targetHeadYaw = 0, targetHeadPitch = 0, lastHeadTransform = '';
+  var touchPointer = null;
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+  function aimHead(clientX, clientY) {
+    var rect = hero.getBoundingClientRect();
+    var headX = rect.left + rect.width / 2;
+    var headY = rect.top + rect.height / 8;
+    targetHeadYaw = clamp((clientX - headX) / (rect.width * 0.65), -1, 1) * 24;
+    targetHeadPitch = clamp((headY - clientY) / (rect.height * 0.42), -1, 1) * 16;
+  }
+  function resetHead() { targetHeadYaw = 0; targetHeadPitch = 0; }
+  hero.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') {
+      if (touchPointer === e.pointerId) aimHead(e.clientX, e.clientY);
+    } else {
+      aimHead(e.clientX, e.clientY);
+    }
+  });
+  hero.addEventListener('pointerleave', function (e) {
+    if (e.pointerType !== 'touch' && touchPointer === null) resetHead();
+  });
+  hero.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'touch' || !e.isPrimary) return;
+    touchPointer = e.pointerId;
+    aimHead(e.clientX, e.clientY);
+    try { hero.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  function releaseTouch(e) {
+    if (touchPointer !== e.pointerId) return;
+    touchPointer = null;
+    resetHead();
+  }
+  hero.addEventListener('pointerup', releaseTouch);
+  hero.addEventListener('pointercancel', releaseTouch);
+  hero.addEventListener('lostpointercapture', releaseTouch);
+
   hero.addEventListener('click', function (e) { e.stopPropagation(); talk(); });
   hero.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); talk(); }
@@ -237,6 +275,16 @@
     if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; lastDir = 0; }
     // walking = side view in the travel direction; idle = turn toward the viewer (3/4 view)
     if (dir !== lastDir) { bodyRy = walking ? dir * 90 : dir * 25; model.style.setProperty('--ry', bodyRy + 'deg'); lastDir = dir; changed(); }
+
+    var headEase = reducedMotion && reducedMotion.matches ? 1 : 1 - Math.pow(0.78, dt);
+    headYaw += (targetHeadYaw - headYaw) * headEase;
+    headPitch += (targetHeadPitch - headPitch) * headEase;
+    var headTransform = headYaw.toFixed(2) + '|' + headPitch.toFixed(2);
+    if (headTransform !== lastHeadTransform) {
+      head.style.setProperty('--head-yaw', headYaw.toFixed(2) + 'deg');
+      head.style.setProperty('--head-pitch', headPitch.toFixed(2) + 'deg');
+      lastHeadTransform = headTransform;
+    }
 
     // keep the speech bubble fully on screen (shift in character-local units)
     if (bubbleW && bubble.classList.contains('show')) {
