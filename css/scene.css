@@ -1,0 +1,146 @@
+/* ==========================================================
+   SHARED SCENE SYSTEM
+   Every page is a stack of absolutely-positioned layers behind the content.
+   All art is pixel art (img/biomes/*.svg), driven by CSS variables set per
+   world in css/biomes.css  (<body data-biome="cherry"> ...).
+
+     .scene
+       .layer-sky   flat sky colour, stars / light rays / cave wall
+       .layer-ceil  things hanging from above (cave roof, canopy, water surface)
+       .layer-far   mountains, hills, distant structures        (parallax .25)
+       .layer-mid   trees, mesas, mushrooms, corals              (parallax .55)
+       .layer-near  ground strip + close-up grass and flowers    (parallax 1)
+       .layer-fx    atmosphere: DOM particles (capped, see js/scene.js)
+       ::after      vignette / warm light
+   Content (.wrap) sits above all of it.
+   ========================================================== */
+
+html { --sc: 1; }
+@media (max-width: 900px) { html { --sc: .75; } }
+@media (max-width: 560px) { html { --sc: .55; } }
+
+body[data-biome]::before { display: none; }          /* the old flat vignette */
+body[data-biome] { background: var(--sky); }
+
+.scene {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+  background: var(--sky);
+}
+.layer {
+  position: absolute; left: -10vw; right: -10vw;      /* 10vw of slack each side for parallax */
+  background-repeat: repeat-x; image-rendering: pixelated;
+}
+.layer-sky  { top: 0; bottom: 0; background: var(--sky-stack); }
+.layer-ceil { top: 0; height: calc(var(--ceil-h, 0px) * var(--sc)); background: var(--ceil) 0 0 / auto 100% repeat-x; }
+.layer-far  { bottom: calc(60px * var(--sc)); height: calc(448px * var(--sc)); background: var(--far) 0 100% / auto 100% repeat-x; }
+.layer-mid  { bottom: calc(80px * var(--sc)); height: calc(320px * var(--sc)); background: var(--mid) 0 100% / auto 100% repeat-x; }
+.layer-near { bottom: 0;                      height: calc(192px * var(--sc)); background: var(--near) 0 100% / auto 100% repeat-x; }
+.layer-fx   { position: absolute; inset: 0; overflow: hidden; }
+.scene::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(var(--glow, 0,0,0,0)), rgba(0,0,0,0) 62%),
+    radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(var(--vig, 0,0,0,.2)) 100%);
+}
+
+/* ---------- atmosphere particles (created by js/scene.js) ---------- */
+.fx { position: absolute; left: 0; top: 0; background-size: 100% 100%; background-repeat: no-repeat; image-rendering: pixelated; }
+.fx-fall   { animation: fx-fall   var(--dur, 14s) linear var(--delay, 0s) infinite; }
+.fx-rise   { animation: fx-rise   var(--dur, 14s) linear var(--delay, 0s) infinite; }
+.fx-drift  { animation: fx-drift  var(--dur, 14s) linear var(--delay, 0s) infinite; }
+.fx-swim   { animation: fx-swim   var(--dur, 40s) linear var(--delay, 0s) infinite; }
+.fx-pulse  { animation: fx-pulse  var(--dur, 4s) ease-in-out var(--delay, 0s) infinite; }
+.fx-flicker{ animation: fx-flicker .9s steps(2, end) var(--delay, 0s) infinite; transform-origin: 50% 100%; }
+.fx-bounce { animation: fx-bounce var(--dur, 1.8s) ease-in-out var(--delay, 0s) infinite alternate; transform-origin: 50% 100%; }
+@keyframes fx-fall  { 0% { transform: translate3d(0,-8vh,0); opacity: 0; } 8%,92% { opacity: 1; } 100% { transform: translate3d(var(--dx, 0), 108vh, 0); opacity: 0; } }
+@keyframes fx-rise  { 0% { transform: translate3d(0,108vh,0); opacity: 0; } 8%,92% { opacity: 1; } 100% { transform: translate3d(var(--dx, 0), -8vh, 0); opacity: 0; } }
+@keyframes fx-drift { 0% { transform: translate3d(-6vw,0,0); opacity: 0; } 10%,90% { opacity: 1; } 100% { transform: translate3d(106vw, var(--dy, 6vh), 0); opacity: 0; } }
+@keyframes fx-swim  { 0% { transform: translate3d(106vw,0,0); } 100% { transform: translate3d(-16vw, var(--dy, 0), 0); } }
+@keyframes fx-pulse { 0%,100% { opacity: .2; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.15); } }
+@keyframes fx-flicker { 0% { transform: scale(1, 1); opacity: 1; } 50% { transform: scale(.9, 1.12); opacity: .85; } }
+@keyframes fx-bounce { from { transform: scale(1.1, .82); } to { transform: scale(.92, 1.14); } }
+
+/* ---------- pause rules: hidden tab, or a mini-game on screen ---------- */
+.scene.is-paused *, .sky.is-paused *, body.game-active .scene *, body.game-active .scene,
+body.game-active .layer { animation-play-state: paused !important; }
+
+/* ---------- signature per-world behaviour (transform/opacity/translate/rotate only) ---------- */
+@keyframes sway-up   { from { rotate: -.35deg; } to { rotate: .35deg; } }
+@keyframes sway-down { from { rotate: -.3deg;  } to { rotate: .3deg;  } }
+@keyframes isles     { from { translate: 0 0; } to { translate: 0 -9px; } }
+@keyframes shimmer   { 0% { translate: 0 0; } 50% { translate: 0 -1px; } 100% { translate: 0 1px; } }
+@keyframes shafts    { from { opacity: .35; } to { opacity: .9; } }
+body[data-biome='cherry'] .layer-mid, body[data-biome='mushroom'] .layer-mid, body[data-biome='jungle'] .layer-mid,
+body[data-biome='plains'] .layer-mid { transform-origin: 50% 100%; animation: sway-up 7s ease-in-out infinite alternate; }
+body[data-biome='jungle'] .layer-ceil, body[data-biome='lush'] .layer-ceil { transform-origin: 50% 0; animation: sway-down 6s ease-in-out infinite alternate; }
+body[data-biome='end'] .layer-far { animation: isles 12s ease-in-out infinite alternate; }
+body[data-biome='end'] .layer-mid { animation: isles 9s ease-in-out -3s infinite alternate; }
+body[data-biome='badlands'] .layer-far { animation: shimmer 2.6s linear infinite alternate; }
+body[data-biome='jungle'] .layer-sky::after {          /* light shafts through the canopy */
+  content: ''; position: absolute; inset: 0; animation: shafts 7s ease-in-out infinite alternate;
+  background: repeating-linear-gradient(105deg, rgba(255,255,190,0) 0 150px, rgba(255,255,190,.13) 150px 210px, rgba(255,255,190,0) 210px 360px);
+  -webkit-mask-image: linear-gradient(#000, transparent 80%); mask-image: linear-gradient(#000, transparent 80%);
+}
+
+/* ---------- reduced motion: a still, calm scene ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .layer-fx { display: none; }
+  .scene *, .scene, .layer { animation: none !important; transition: none !important; }
+}
+
+/* ---------- small screens: simpler scene (fewer layers, no pointer parallax) ---------- */
+@media (max-width: 700px) { .layer-far { display: none; } }
+
+/* ==========================================================
+   DIORAMA: the same layers, miniaturised (chapter banners, Plains preview)
+   ========================================================== */
+.diorama, body[data-biome] .hero {
+  background:
+    var(--ceil) 0 0 / auto calc(var(--ceil-h, 0px) * .5) repeat-x,
+    var(--near) 0 100% / auto 96px repeat-x,
+    var(--mid)  0 calc(100% - 40px) / auto 200px repeat-x,
+    var(--far)  0 calc(100% - 30px) / auto 224px repeat-x,
+    var(--sky-stack);
+  image-rendering: pixelated;
+}
+body[data-biome] .hero {
+  min-height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: inset 6px 6px 0 rgba(255,255,255,.2), inset -6px -6px 0 rgba(0,0,0,.35);
+}
+body[data-biome] .hero-icon { animation: floaty 3.2s ease-in-out infinite alternate; }
+@keyframes floaty { to { transform: translateY(-6px); } }
+body[data-biome] .hero h1, body[data-biome] .hero p { background: rgba(8,8,12,.78); color: #fff; }
+
+/* ==========================================================
+   TITLE SCREEN: THE OVERWORLD
+   ========================================================== */
+.title-body .sky { background: linear-gradient(#4f9bff 0 22%, #5fa6ff 22% 40%, #78b6ff 40% 58%, #94c6ff 58% 76%, #b4d8ff 76% 100%); }
+.title-body .sky .layer { image-rendering: pixelated; }
+.title-body .layer-far { bottom: calc(var(--ground-h) - 12px); height: calc(448px * var(--sc)); background: var(--far) 0 100% / auto 100% repeat-x; }
+.title-body .layer-mid { bottom: calc(var(--ground-h) - 8px);  height: calc(192px * var(--sc)); background: var(--mid) 0 100% / auto 100% repeat-x; transform-origin: 50% 100%; animation: sway-up 6s ease-in-out infinite alternate; }
+.title-body .ground {
+  background: url('../img/biomes/title_grass.svg') repeat-x 0 0 / 64px 64px, url('../img/biomes/title_dirt.svg') 0 0 / 64px 64px;
+  border-top: 0;
+}
+.title-body .ground::before {                           /* swaying grass + flowers on the surface */
+  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(96px * var(--sc)); pointer-events: none;
+  background: var(--near) 0 100% / auto 100% repeat-x; image-rendering: pixelated;
+  transform-origin: 50% 100%; animation: sway-down 5s ease-in-out infinite alternate;
+}
+.title-body .cloud { box-shadow: 32px -32px 0 #fff, 64px -16px 0 #fff, 96px 0 0 #fff, 128px 0 0 #fff, 0 8px 0 #e4eefc; }
+
+/* "Play World" is a wooden signpost standing in the world */
+.title-body .play {
+  position: relative; margin-bottom: 70px; color: #1f1710; text-shadow: none;
+  background: #c9a468; border: 4px solid #000;
+  box-shadow: inset 4px 4px 0 #e2c68c, inset -4px -4px 0 #8a6a3a, 0 6px 0 rgba(0,0,0,.3);
+}
+.title-body .play::after {
+  content: ''; position: absolute; left: 50%; top: 100%; width: 28px; height: 70px; margin-left: -14px; z-index: -1;
+  background: #8a5a2b; border: 4px solid #000; border-top: 0; box-shadow: inset 4px 0 0 #a8743a, inset -4px 0 0 #6b4520;
+}
+.title-body .play:hover, .title-body .play:focus-visible { background: #d9b67a; box-shadow: inset 4px 4px 0 #f0d8a2, inset -4px -4px 0 #8a6a3a, 0 6px 0 rgba(0,0,0,.3); }
+.title-body .hint { color: #0c2a4d; text-shadow: none; background: rgba(255,255,255,.55); padding: 2px 8px; }
+
+/* phones: the speech bubble + on-screen buttons already explain the controls, so the hint would collide with them */
+@media (max-width: 560px) { .title-body .hint { display: none; } }

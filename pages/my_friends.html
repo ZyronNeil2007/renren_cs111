@@ -6,13 +6,23 @@
   <title>My Friends · Life Craft</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/biomes.css">
+  <link rel="stylesheet" href="../css/scene.css">
+  <link rel="stylesheet" href="../css/world-objects.css">
   <script src="../js/transition.js"></script>
 </head>
 <body data-biome="jungle" data-sway data-hang style="--c:#2f9f3a; --c2:#238a2f;">
+  <div class="scene" aria-hidden="true">
+    <div class="layer layer-sky"></div>
+    <div class="layer layer-ceil"></div>
+    <div class="layer layer-far" data-speed=".25"></div>
+    <div class="layer layer-mid" data-speed=".55"></div>
+    <div class="layer layer-near" data-speed="1"></div>
+    <div class="layer-fx"></div>
+  </div>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <a class="mc-btn" data-morph data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664; World</a>
+    <a class="mc-btn" data-morph data-biome="plains" data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664; World</a>
     <span class="topbar-title">CHAPTER 3 / 8 &middot; <span class="biome">JUNGLE</span></span>
   </header>
 
@@ -55,13 +65,14 @@
     </section>
 
     <nav class="pager">
-      <a class="mc-btn" data-morph data-world="the Lush Caves" href="family_relatives.html" style="--c:#6b8e3a; --c2:#58792e;">&#9664; Family</a>
-      <a class="mc-btn" data-morph data-world="the Warm Ocean" href="me_and_my_love.html" style="--c:#1fa3c9; --c2:#1a8fb2;">Me &amp; My Love &#9654;</a>
+      <a class="mc-btn" data-morph data-biome="lush" data-world="the Lush Caves" href="family_relatives.html" style="--c:#6b8e3a; --c2:#58792e;">&#9664; Family</a>
+      <a class="mc-btn" data-morph data-biome="ocean" data-world="the Warm Ocean" href="me_and_my_love.html" style="--c:#1fa3c9; --c2:#1a8fb2;">Me &amp; My Love &#9654;</a>
     </nav>
   </main>
 
   <footer class="foot">You are exploring the <b>Jungle</b> &middot; chapter 3 of 8</footer>
 
+  <script src="../js/scene.js"></script>
   <script src="../js/lightbox.js"></script>
   <script src="../js/games.js"></script>
 </body>

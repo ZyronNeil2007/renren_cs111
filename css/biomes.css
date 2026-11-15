@@ -1,248 +1,115 @@
-/* ==========================================================
-   LIFE CRAFT — BIOMES & DIMENSIONS
-   Every page is a different Minecraft world. Generated art lives in
-   img/biomes/*.svg (pixel art, 1 cell = 8px); each world is driven by CSS
-   variables set on  <body data-biome="...">.
+/* GENERATED per-biome palettes & scenery variables (see css/scene.css for the layer system).
+   Each world is selected with <body data-biome="...">; art lives in img/biomes/*.svg. */
 
-   Layer order (all fixed, behind the content):
-     html::before  sky colour + stars/rays + ceiling + far scenery + vignette
-     body::before  particle layer 1 (clouds, petals, fish, ash ...)
-     body::after   particle layer 2 (bubbles, sparks, spores ...)
-     html::after   near scenery + ground
-   ========================================================== */
-
-html { --sc: 1; }
-@media (max-width: 900px) { html { --sc: .75; } }
-@media (max-width: 560px) { html { --sc: .55; } }
-
-body[data-biome] { background: var(--sky); }
-
-html:has(body[data-biome])::before, html:has(body[data-biome])::after {
-  content: ''; position: fixed; left: 0; right: 0; z-index: -1; pointer-events: none;
-}
-html:has(body[data-biome])::before { top: 0; bottom: 0; background: var(--bg-stack); }
-html:has(body[data-biome])::after {
-  bottom: 0; height: calc(320px * var(--sc));
-  background: var(--near) repeat-x 0 100% / auto 100%;
-}
-body[data-biome]::before, body[data-biome]::after {
-  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-repeat: repeat; background-position: 0 0;
-}
-body[data-biome]::before { background-image: var(--p1); background-size: var(--p1s); animation: drift1 var(--d1, 60s) linear infinite; }
-body[data-biome]::after  { background-image: var(--p2, none); background-size: var(--p2s, 256px 256px); animation: drift2 var(--d2, 60s) linear infinite; }
-@keyframes drift1 { to { background-position: var(--x1, 0) var(--y1, 0); } }
-@keyframes drift2 { to { background-position: var(--x2, 0) var(--y2, 0); } }
-
-/* gentle sway for living scenery (cherry, jungle) */
-@keyframes sway { from { transform: skewX(-.5deg); } to { transform: skewX(.5deg); } }
-html:has(body[data-sway])::after { transform-origin: 50% 100%; animation: sway 7s ease-in-out infinite alternate; }
-
-/* ---------- chapter banner = a little diorama of the biome ---------- */
-body[data-biome] .hero {
-  min-height: 270px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--hero-bg);
-  background-repeat: repeat-x, repeat-x, repeat-x, repeat, repeat;
-  background-position: 0 0, 0 100%, 0 100%, 0 0, 0 0;
-  background-size: auto calc(176px * .6), auto 190px, auto 215px, 256px 256px, auto;
-  box-shadow: inset 6px 6px 0 rgba(255,255,255,.22), inset -6px -6px 0 rgba(0,0,0,.35);
-}
-body[data-biome] .hero-icon { animation: floaty 3.2s ease-in-out infinite alternate; }
-@keyframes floaty { to { transform: translateY(-6px); } }
-
-/* ---------- navigation bar ---------- */
-body[data-biome] .topbar { background: var(--bar); box-shadow: inset 0 4px 0 var(--bar-hi), 0 4px 0 rgba(0,0,0,.25); }
-body[data-biome] .topbar-title { color: #f1f1f1; }
-body[data-biome] .topbar-title .biome { color: var(--accent); }
-
-/* ---------- panels, headings, text ---------- */
-body[data-biome] .panel {
-  background: var(--panel); color: var(--ink);
-  box-shadow: inset 4px 4px 0 var(--pan-hi), inset -4px -4px 0 var(--pan-lo);
-}
-body[data-biome] .hub-head h1, body[data-biome] .dish summary h2, body[data-biome] .movie-detail h2,
-body[data-biome] .why h2, body[data-biome] .game h2 { color: var(--ink-head); }
-body[data-biome] .dish summary span, body[data-biome] .movie-detail .meta { color: var(--ink-sub); }
-body[data-biome] .movie-cols h3, body[data-biome] .game .game-h3, body[data-biome] .joke .n { color: var(--ink-acc); }
-body[data-biome] .game-tag, body[data-biome] .game-status { color: var(--ink-acc2); }
-body[data-biome] .movie-detail, body[data-biome] .joke { color: var(--ink); }
-body[data-biome] .panel-dark {
-  box-shadow: inset 4px 4px 0 rgba(255,255,255,.14), inset -4px -4px 0 rgba(0,0,0,.4), 0 0 0 4px var(--accent-dim);
-}
-
-/* pale note boxes keep dark text even in dark worlds */
-body[data-biome] .clip-missing, body[data-biome] .recipe .tip { color: #2a2118; }
-
-/* ---------- buttons ---------- */
-body[data-biome] .mc-btn { background: var(--btn); box-shadow: inset 4px 4px 0 var(--btn-hi), inset -4px -4px 0 var(--btn-lo); }
-body[data-biome] .mc-btn:hover, body[data-biome] .mc-btn:focus-visible {
-  background: var(--btn-hover); box-shadow: inset 4px 4px 0 rgba(255,255,255,.4), inset -4px -4px 0 rgba(0,0,0,.35);
-}
-body[data-biome] .topbar .mc-btn { background: var(--bar-hi); box-shadow: inset 4px 4px 0 rgba(255,255,255,.3), inset -4px -4px 0 rgba(0,0,0,.4); }
-
-/* ---------- photo frames ---------- */
-body[data-biome] .photo .frame { outline-color: var(--frame); }
-body[data-biome] .photo .frame::after {
-  content: ''; position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; z-index: 2; pointer-events: none;
-  background: var(--deco); box-shadow: -16px 8px 0 var(--deco2), -6px 24px 0 var(--deco), -22px 28px 0 var(--deco2);
-}
-body[data-biome] .photo figcaption { background: rgba(0,0,0,.62); }
-
-/* ---------- footer sign ---------- */
-body[data-biome] .foot, .foot.sign {
-  width: fit-content; max-width: calc(100% - 32px); margin: 28px auto 44px; padding: 10px 18px;
-  background: var(--sign); color: var(--sign-ink); text-shadow: none; border: 4px solid #000;
-  box-shadow: inset 3px 3px 0 rgba(255,255,255,.35), inset -3px -3px 0 rgba(0,0,0,.3), 0 6px 0 rgba(0,0,0,.3);
-}
-body[data-biome] .foot b { color: var(--ink-acc); }
-
-/* ---------- per-biome layout personality ---------- */
-body[data-hang] .photo { position: relative; margin-top: 22px; }
-body[data-hang] .photo::before {      /* frames hang from vines */
-  content: ''; position: absolute; top: -22px; left: 50%; width: 6px; height: 22px; z-index: 3;
-  background: #2e8b3a; box-shadow: 8px 6px 0 #2e8b3a, -8px 10px 0 #1e7a2a;
-}
-body[data-biome='lush'] .photo::before { box-shadow: 8px 6px 0 #2e8b3a, 0 18px 0 6px #ffd84a, -8px 10px 0 #1e7a2a; }
-body[data-biome='cherry'] .photo:nth-child(odd) .frame { transform: rotate(-1.4deg); }
-body[data-biome='cherry'] .photo:nth-child(even) .frame { transform: rotate(1.2deg); }
-body[data-biome='cherry'] .photo .frame:hover { transform: translateY(-5px) rotate(0deg); }
-body[data-bob] .photo .frame { animation: bobframe 5s ease-in-out infinite alternate; }
-body[data-bob] .photo:nth-child(2n) .frame { animation-delay: -2s; }
-body[data-bob] .photo:nth-child(3n) .frame { animation-delay: -3.5s; }
-@keyframes bobframe { to { translate: 0 -6px; } }
-body[data-biome='mushroom'] .joke:nth-child(odd) { transform: rotate(-.5deg); }
-body[data-biome='mushroom'] .joke:nth-child(even) { transform: rotate(.5deg); }
-body[data-biome='mushroom'] .photo:nth-child(odd) .frame { transform: rotate(-1deg); }
-body[data-biome='mushroom'] .photo:nth-child(even) .frame { transform: rotate(1deg); }
-body[data-biome='end'] .poster-btn, body[data-biome='end'] .photo .frame {
-  box-shadow: 0 0 0 4px #000, 0 0 18px 4px rgba(199,125,255,.55);
-}
-body[data-biome='end'] .poster-btn:hover { box-shadow: 0 0 0 4px #000, 0 0 28px 8px rgba(224,180,255,.8); }
-body[data-biome='soul'] .panel-dark, body[data-biome='soul'] .panel { animation: soulglow 4s ease-in-out infinite alternate; }
-@keyframes soulglow { from { filter: none; } to { filter: drop-shadow(0 0 6px rgba(111,227,255,.35)); } }
-body[data-biome='ocean'] .panel { backdrop-filter: blur(2px); }
-body[data-biome='lush'] .hero h1 { text-shadow: 0 0 14px rgba(255,216,74,.6); }
-
-@media (prefers-reduced-motion: reduce) {
-  body[data-biome]::before, body[data-biome]::after { animation: none !important; }
-  html:has(body[data-sway])::after { animation: none !important; }
-}
-
-body[data-biome='plains'], html:has(body[data-biome='plains']) {
-  --sky: #78b6ff; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,.18) 100%), url('../img/biomes/plains_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), #78b6ff; --hero-bg: none, url('../img/biomes/plains_near.svg'), url('../img/biomes/plains_far.svg'), none, linear-gradient(#78b6ff, #78b6ff);
-  --near: url('../img/biomes/plains_near.svg');
+body[data-biome='plains'], .dio-plains {
+  --sky: #78b6ff; --sky-stack: #78b6ff;
+  --far: url('../img/biomes/plains_far.svg'); --mid: url('../img/biomes/plains_mid.svg'); --near: url('../img/biomes/plains_near.svg');
+  --ceil: none; --ceil-h: 0px;
+  --vig: 0,0,0,.16;
+  --glow: 0,0,0,0;
   --bar: #3f7a2e; --bar-hi: #5fa83f; --accent: #ffff55; --accent-dim: #ffff5555;
-  --panel: url('../img/biomes/plains_panel.svg') 0 0 / 64px 64px, #c29d62; --pan-hi: #e6c88a; --pan-lo: #7a5a35;
-  --ink: #2a2118; --ink-head: #1f1710; --ink-sub: #3a2d1f; --ink-acc: #2f7a2e; --ink-acc2: #1f4fa8;
-  --btn: #5d9b3a; --btn-hi: #8fd06e; --btn-lo: #3f6f26; --btn-hover: #7ab84f;
-  --frame: #8a5a2b; --deco: #ffd84a; --deco2: #e8453a; --sign: #c29d62; --sign-ink: #2a2118;
-  --p1: url('../img/biomes/plains_p1.svg'); --p1s: 512px 256px; --x1: 512px; --y1: 0; --d1: 140s;
+  --plate: #f1e3bd; --rim: #8a6a3a; --tex: url('../img/biomes/plains_panel.svg'); --pan-hi: #e6c88a; --pan-lo: #7a5a35;
+  --ink: #2a2118; --ink-head: #1f1710; --ink-sub: #4a3a26; --ink-acc: #2a6a1a; --ink-acc2: #1f4fa8;
+  --btn: #5d9b3a; --btn-hi: #8fd06e; --btn-lo: #3f6f26; --btn-hover: #7ab84f; --btn-ink: #17120d;
+  --frame: #8a5a2b; --deco: #ffd84a; --deco2: #e8453a;
 }
-body[data-biome='cherry'], html:has(body[data-biome='cherry']) {
-  --sky: #c9e4ff; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(70,20,60,.28) 100%), url('../img/biomes/cherry_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), #c9e4ff; --hero-bg: none, url('../img/biomes/cherry_near.svg'), url('../img/biomes/cherry_far.svg'), none, linear-gradient(#c9e4ff, #c9e4ff);
-  --near: url('../img/biomes/cherry_near.svg');
+body[data-biome='cherry'], .dio-cherry {
+  --sky: #c9e4ff; --sky-stack: #c9e4ff;
+  --far: url('../img/biomes/cherry_far.svg'); --mid: url('../img/biomes/cherry_mid.svg'); --near: url('../img/biomes/cherry_near.svg');
+  --ceil: none; --ceil-h: 0px;
+  --vig: 70,20,60,.26;
+  --glow: 0,0,0,0;
   --bar: #a8567a; --bar-hi: #d98bab; --accent: #ffe0ee; --accent-dim: #ffe0ee55;
-  --panel: url('../img/biomes/cherry_panel.svg') 0 0 / 64px 64px, #e8b4bf; --pan-hi: #ffd9e6; --pan-lo: #b87a8a;
-  --ink: #3a1f2a; --ink-head: #2b1420; --ink-sub: #4a2a38; --ink-acc: #b8366a; --ink-acc2: #8a2a5a;
-  --btn: #e87fa8; --btn-hi: #ffb8d2; --btn-lo: #b8567a; --btn-hover: #ff9fc4;
-  --frame: #c9708f; --deco: #ffb8d2; --deco2: #ffffff; --sign: #e8b4bf; --sign-ink: #3a1f2a;
-  --p1: url('../img/biomes/cherry_p1.svg'); --p1s: 256px 256px; --x1: -256px; --y1: 256px; --d1: 22s;
-  --p2: url('../img/biomes/cherry_p2.svg'); --p2s: 256px 256px; --x2: 256px; --y2: 256px; --d2: 34s;
+  --plate: #fde8ee; --rim: #b87a8a; --tex: url('../img/biomes/cherry_panel.svg'); --pan-hi: #ffd9e6; --pan-lo: #b87a8a;
+  --ink: #3a1f2a; --ink-head: #2b1420; --ink-sub: #5a3446; --ink-acc: #a02460; --ink-acc2: #8a2a5a;
+  --btn: #e87fa8; --btn-hi: #ffb8d2; --btn-lo: #b8567a; --btn-hover: #ff9fc4; --btn-ink: #17120d;
+  --frame: #c9708f; --deco: #ffb8d2; --deco2: #ffffff;
 }
-body[data-biome='lush'], html:has(body[data-biome='lush']) {
-  --sky: #141f13; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,10,0,.72) 100%), radial-gradient(ellipse at 50% 35%, rgba(255,214,90,.16), rgba(0,0,0,0) 62%), url('../img/biomes/lush_ceil.svg') repeat-x 0 0 / auto calc(176px * var(--sc)), url('../img/biomes/lush_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), url('../img/biomes/lush_wall.svg') 0 0 / 256px 256px, #141f13; --hero-bg: url('../img/biomes/lush_ceil.svg'), url('../img/biomes/lush_near.svg'), url('../img/biomes/lush_far.svg'), url('../img/biomes/lush_wall.svg'), linear-gradient(#141f13, #141f13);
-  --near: url('../img/biomes/lush_near.svg');
+body[data-biome='lush'], .dio-lush {
+  --sky: #141f13; --sky-stack: url('../img/biomes/lush_wall.svg') 0 0 / 256px 256px, #141f13;
+  --far: url('../img/biomes/lush_far.svg'); --mid: url('../img/biomes/lush_mid.svg'); --near: url('../img/biomes/lush_near.svg');
+  --ceil: url('../img/biomes/lush_ceil.svg'); --ceil-h: 176px;
+  --vig: 0,10,0,.7;
+  --glow: 255,214,90,.16;
   --bar: #2b3d24; --bar-hi: #4a6a34; --accent: #ffd84a; --accent-dim: #ffd84a55;
-  --panel: url('../img/biomes/lush_panel.svg') 0 0 / 64px 64px, #9bb26a; --pan-hi: #c9de9a; --pan-lo: #4f6f2a;
-  --ink: #1d2a12; --ink-head: #14200b; --ink-sub: #2a3a1c; --ink-acc: #2f6a1f; --ink-acc2: #7a5a08;
-  --btn: #5b8a2f; --btn-hi: #8fbf4f; --btn-lo: #3a5a1f; --btn-hover: #c9a32a;
-  --frame: #5b8a2f; --deco: #ffd84a; --deco2: #fff0a0; --sign: #9bb26a; --sign-ink: #14200b;
-  --p1: url('../img/biomes/lush_p1.svg'); --p1s: 256px 256px; --x1: 0; --y1: -256px; --d1: 50s;
-  --p2: url('../img/biomes/lush_p2.svg'); --p2s: 256px 256px; --x2: 0; --y2: -256px; --d2: 70s;
+  --plate: #dcebb8; --rim: #5b7f35; --tex: url('../img/biomes/lush_panel.svg'); --pan-hi: #c9de9a; --pan-lo: #4f6f2a;
+  --ink: #1d2a12; --ink-head: #14200b; --ink-sub: #33452a; --ink-acc: #2a5f1a; --ink-acc2: #6a4a06;
+  --btn: #5b8a2f; --btn-hi: #8fbf4f; --btn-lo: #3a5a1f; --btn-hover: #c9a32a; --btn-ink: #17120d;
+  --frame: #5b8a2f; --deco: #ffd84a; --deco2: #fff0a0;
 }
-body[data-biome='jungle'], html:has(body[data-biome='jungle']) {
-  --sky: #7fd6e8; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,25,5,.42) 100%), url('../img/biomes/jungle_ceil.svg') repeat-x 0 0 / auto calc(176px * var(--sc)), url('../img/biomes/jungle_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), #7fd6e8; --hero-bg: url('../img/biomes/jungle_ceil.svg'), url('../img/biomes/jungle_near.svg'), url('../img/biomes/jungle_far.svg'), none, linear-gradient(#7fd6e8, #7fd6e8);
-  --near: url('../img/biomes/jungle_near.svg');
+body[data-biome='jungle'], .dio-jungle {
+  --sky: #7fd6e8; --sky-stack: #7fd6e8;
+  --far: url('../img/biomes/jungle_far.svg'); --mid: url('../img/biomes/jungle_mid.svg'); --near: url('../img/biomes/jungle_near.svg');
+  --ceil: url('../img/biomes/jungle_ceil.svg'); --ceil-h: 176px;
+  --vig: 0,25,5,.42;
+  --glow: 0,0,0,0;
   --bar: #1e4d26; --bar-hi: #2f7a3a; --accent: #e8ff6a; --accent-dim: #e8ff6a55;
-  --panel: url('../img/biomes/jungle_panel.svg') 0 0 / 64px 64px, #b0875a; --pan-hi: #d4aa78; --pan-lo: #6b4a2b;
-  --ink: #2a1d10; --ink-head: #1f150a; --ink-sub: #3a2a18; --ink-acc: #1f6a2a; --ink-acc2: #a05a10;
-  --btn: #2f9f3a; --btn-hi: #6fd47a; --btn-lo: #1b6e26; --btn-hover: #e0a030;
-  --frame: #6b4a2b; --deco: #2fb14a; --deco2: #ff5a8a; --sign: #b0875a; --sign-ink: #2a1d10;
-  --p1: url('../img/biomes/jungle_p1.svg'); --p1s: 256px 256px; --x1: -256px; --y1: 256px; --d1: 28s;
-  --p2: url('../img/biomes/jungle_p2.svg'); --p2s: 256px 256px; --x2: 256px; --y2: -256px; --d2: 60s;
+  --plate: #eddcb2; --rim: #6b4a2b; --tex: url('../img/biomes/jungle_panel.svg'); --pan-hi: #d4aa78; --pan-lo: #6b4a2b;
+  --ink: #2a1d10; --ink-head: #1f150a; --ink-sub: #4a3622; --ink-acc: #1f5f28; --ink-acc2: #8a4a08;
+  --btn: #2f9f3a; --btn-hi: #6fd47a; --btn-lo: #1b6e26; --btn-hover: #e0a030; --btn-ink: #17120d;
+  --frame: #6b4a2b; --deco: #2fb14a; --deco2: #ff5a8a;
 }
-body[data-biome='ocean'], html:has(body[data-biome='ocean']) {
-  --sky: #1d7fc4; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,40,90,.45) 100%), url('../img/biomes/ocean_ceil.svg') repeat-x 0 0 / auto calc(64px * var(--sc)), url('../img/biomes/ocean_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), url('../img/biomes/ocean_sky.svg') 0 0 / 256px 256px, #1d7fc4; --hero-bg: url('../img/biomes/ocean_ceil.svg'), url('../img/biomes/ocean_near.svg'), url('../img/biomes/ocean_far.svg'), url('../img/biomes/ocean_sky.svg'), linear-gradient(#1d7fc4, #1d7fc4);
-  --near: url('../img/biomes/ocean_near.svg');
+body[data-biome='ocean'], .dio-ocean {
+  --sky: #1d7fc4; --sky-stack: url('../img/biomes/ocean_sky.svg') 0 0 / 256px 256px, #1d7fc4;
+  --far: url('../img/biomes/ocean_far.svg'); --mid: url('../img/biomes/ocean_mid.svg'); --near: url('../img/biomes/ocean_near.svg');
+  --ceil: url('../img/biomes/ocean_ceil.svg'); --ceil-h: 64px;
+  --vig: 0,40,90,.45;
+  --glow: 0,0,0,0;
   --bar: #0f4f86; --bar-hi: #2f84c4; --accent: #bfe8ff; --accent-dim: #bfe8ff55;
-  --panel: url('../img/biomes/ocean_panel.svg') 0 0 / 64px 64px, rgba(205,240,248,.9); --pan-hi: #ffffff; --pan-lo: #5fb4d0;
-  --ink: #0b2a45; --ink-head: #07203a; --ink-sub: #12405f; --ink-acc: #0b6b8f; --ink-acc2: #b8442a;
-  --btn: #1fa3c9; --btn-hi: #7fe0f4; --btn-lo: #0f6f8f; --btn-hover: #ff8a6a;
-  --frame: #e86aa8; --deco: #ffffff; --deco2: #bfe8ff; --sign: #cdf0f8; --sign-ink: #0b2a45;
-  --p1: url('../img/biomes/ocean_p1.svg'); --p1s: 256px 256px; --x1: -256px; --y1: 0; --d1: 40s;
-  --p2: url('../img/biomes/ocean_p2.svg'); --p2s: 256px 256px; --x2: 0; --y2: -256px; --d2: 20s;
+  --plate: rgba(226,247,251,.96); --rim: #2f84c4; --tex: url('../img/biomes/ocean_panel.svg'); --pan-hi: #ffffff; --pan-lo: #5fb4d0;
+  --ink: #0b2a45; --ink-head: #07203a; --ink-sub: #12405f; --ink-acc: #0b5f82; --ink-acc2: #a83a22;
+  --btn: #1fa3c9; --btn-hi: #7fe0f4; --btn-lo: #0f6f8f; --btn-hover: #ff8a6a; --btn-ink: #17120d;
+  --frame: #e86aa8; --deco: #ffffff; --deco2: #bfe8ff;
 }
-body[data-biome='badlands'], html:has(body[data-biome='badlands']) {
-  --sky: #e8825a; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(90,30,0,.45) 100%), url('../img/biomes/badlands_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), linear-gradient(#f6b26b 0% 14%, #f3a460 14% 28%, #f19a5a 28% 42%, #ee8d56 42% 57%, #e8825a 57% 71%, #e07458 71% 85%, #d96a4e 85% 100%), #e8825a; --hero-bg: none, url('../img/biomes/badlands_near.svg'), url('../img/biomes/badlands_far.svg'), none, linear-gradient(#f6b26b 0% 14%, #f3a460 14% 28%, #f19a5a 28% 42%, #ee8d56 42% 57%, #e8825a 57% 71%, #e07458 71% 85%, #d96a4e 85% 100%);
-  --near: url('../img/biomes/badlands_near.svg');
+body[data-biome='badlands'], .dio-badlands {
+  --sky: #e8825a; --sky-stack: linear-gradient(#f6b26b 0% 14%, #f3a460 14% 28%, #f19a5a 28% 42%, #ee8d56 42% 57%, #e8825a 57% 71%, #e07458 71% 85%, #d96a4e 85% 100%), #e8825a;
+  --far: url('../img/biomes/badlands_far.svg'); --mid: url('../img/biomes/badlands_mid.svg'); --near: url('../img/biomes/badlands_near.svg');
+  --ceil: none; --ceil-h: 0px;
+  --vig: 90,30,0,.45;
+  --glow: 0,0,0,0;
   --bar: #7a3a22; --bar-hi: #a85a38; --accent: #ffd56a; --accent-dim: #ffd56a55;
-  --panel: url('../img/biomes/badlands_panel.svg') 0 0 / 64px 64px, #c98a5e; --pan-hi: #e8b890; --pan-lo: #8a4a2a;
-  --ink: #2b1810; --ink-head: #20100a; --ink-sub: #3a2216; --ink-acc: #8a2f12; --ink-acc2: #6b4a10;
-  --btn: #c4572f; --btn-hi: #e8885a; --btn-lo: #8a3a1f; --btn-hover: #e8a23a;
-  --frame: #a65a35; --deco: #e8a23a; --deco2: #ffd9a0; --sign: #c98a5e; --sign-ink: #2b1810;
-  --p1: url('../img/biomes/badlands_p1.svg'); --p1s: 256px 256px; --x1: -256px; --y1: 0; --d1: 18s;
+  --plate: #f2d2b0; --rim: #a86a44; --tex: url('../img/biomes/badlands_panel.svg'); --pan-hi: #e8b890; --pan-lo: #8a4a2a;
+  --ink: #2b1810; --ink-head: #20100a; --ink-sub: #4a2e1c; --ink-acc: #7a2a10; --ink-acc2: #5a3a08;
+  --btn: #b84a26; --btn-hi: #e8885a; --btn-lo: #8a3a1f; --btn-hover: #9a3f1f; --btn-ink: #ffffff;
+  --frame: #a65a35; --deco: #e8a23a; --deco2: #ffd9a0;
 }
-body[data-biome='end'], html:has(body[data-biome='end']) {
-  --sky: #0a0612; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,.6) 100%), url('../img/biomes/end_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), url('../img/biomes/end_sky.svg') 0 0 / 256px 256px, #0a0612; --hero-bg: none, url('../img/biomes/end_near.svg'), url('../img/biomes/end_far.svg'), url('../img/biomes/end_sky.svg'), linear-gradient(#0a0612, #0a0612);
-  --near: url('../img/biomes/end_near.svg');
+body[data-biome='end'], .dio-end {
+  --sky: #0a0612; --sky-stack: url('../img/biomes/end_sky.svg') 0 0 / 256px 256px, #0a0612;
+  --far: url('../img/biomes/end_far.svg'); --mid: url('../img/biomes/end_mid.svg'); --near: url('../img/biomes/end_near.svg');
+  --ceil: none; --ceil-h: 0px;
+  --vig: 0,0,0,.55;
+  --glow: 0,0,0,0;
   --bar: #120a1f; --bar-hi: #2a1844; --accent: #e0b4ff; --accent-dim: #e0b4ff55;
-  --panel: url('../img/biomes/end_panel.svg') 0 0 / 64px 64px, #1c1030; --pan-hi: #4a2a7a; --pan-lo: #0a0414;
+  --plate: #1c1030; --rim: #4a2a7a; --tex: url('../img/biomes/end_panel.svg'); --pan-hi: #4a2a7a; --pan-lo: #0a0414;
   --ink: #efe6ff; --ink-head: #ffffff; --ink-sub: #cbb8ee; --ink-acc: #d9a0ff; --ink-acc2: #ff8ae0;
-  --btn: #4a2a7a; --btn-hi: #8a5ad0; --btn-lo: #241040; --btn-hover: #c77dff;
-  --frame: #6a3aa8; --deco: #c77dff; --deco2: #ffffff; --sign: #1c1030; --sign-ink: #efe6ff;
-  --p1: url('../img/biomes/end_p1.svg'); --p1s: 256px 256px; --x1: 0; --y1: -256px; --d1: 60s;
-  --p2: url('../img/biomes/end_p2.svg'); --p2s: 256px 256px; --x2: 0; --y2: -256px; --d2: 120s;
+  --btn: #4a2a7a; --btn-hi: #8a5ad0; --btn-lo: #241040; --btn-hover: #6a3aa8; --btn-ink: #ffffff;
+  --frame: #6a3aa8; --deco: #c77dff; --deco2: #ffffff;
 }
-body[data-biome='soul'], html:has(body[data-biome='soul']) {
-  --sky: #0f1c28; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,10,20,.68) 100%), url('../img/biomes/soul_ceil.svg') repeat-x 0 0 / auto calc(176px * var(--sc)), url('../img/biomes/soul_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), #0f1c28; --hero-bg: url('../img/biomes/soul_ceil.svg'), url('../img/biomes/soul_near.svg'), url('../img/biomes/soul_far.svg'), none, linear-gradient(#0f1c28, #0f1c28);
-  --near: url('../img/biomes/soul_near.svg');
+body[data-biome='soul'], .dio-soul {
+  --sky: #0f1c28; --sky-stack: #0f1c28;
+  --far: url('../img/biomes/soul_far.svg'); --mid: url('../img/biomes/soul_mid.svg'); --near: url('../img/biomes/soul_near.svg');
+  --ceil: url('../img/biomes/soul_ceil.svg'); --ceil-h: 176px;
+  --vig: 0,10,20,.66;
+  --glow: 0,0,0,0;
   --bar: #141c26; --bar-hi: #243241; --accent: #6fe3ff; --accent-dim: #6fe3ff55;
-  --panel: url('../img/biomes/soul_panel.svg') 0 0 / 64px 64px, #26323f; --pan-hi: #3a4d5f; --pan-lo: #0b1218;
+  --plate: #222d3a; --rim: #3a4d5f; --tex: url('../img/biomes/soul_panel.svg'); --pan-hi: #3a4d5f; --pan-lo: #0b1218;
   --ink: #e1ecf5; --ink-head: #ffffff; --ink-sub: #b4c6d6; --ink-acc: #6fe3ff; --ink-acc2: #9ad8ff;
-  --btn: #2b4a63; --btn-hi: #5a8ab0; --btn-lo: #15283a; --btn-hover: #2aa6d0;
-  --frame: #2b4a63; --deco: #6fe3ff; --deco2: #c8f6ff; --sign: #26323f; --sign-ink: #e1ecf5;
-  --p1: url('../img/biomes/soul_p1.svg'); --p1s: 256px 256px; --x1: -256px; --y1: 256px; --d1: 40s;
-  --p2: url('../img/biomes/soul_p2.svg'); --p2s: 256px 256px; --x2: 0; --y2: -256px; --d2: 36s;
+  --btn: #2b4a63; --btn-hi: #5a8ab0; --btn-lo: #15283a; --btn-hover: #2d6a8f; --btn-ink: #ffffff;
+  --frame: #2b4a63; --deco: #6fe3ff; --deco2: #c8f6ff;
 }
-body[data-biome='mushroom'], html:has(body[data-biome='mushroom']) {
-  --sky: #b9d4ff; --bg-stack: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(40,20,60,.35) 100%), url('../img/biomes/mushroom_far.svg') repeat-x 0 100% / auto calc(448px * var(--sc)), #b9d4ff; --hero-bg: none, url('../img/biomes/mushroom_near.svg'), url('../img/biomes/mushroom_far.svg'), none, linear-gradient(#b9d4ff, #b9d4ff);
-  --near: url('../img/biomes/mushroom_near.svg');
+body[data-biome='mushroom'], .dio-mushroom {
+  --sky: #b9d4ff; --sky-stack: #b9d4ff;
+  --far: url('../img/biomes/mushroom_far.svg'); --mid: url('../img/biomes/mushroom_mid.svg'); --near: url('../img/biomes/mushroom_near.svg');
+  --ceil: none; --ceil-h: 0px;
+  --vig: 40,20,60,.32;
+  --glow: 0,0,0,0;
   --bar: #5a4a63; --bar-hi: #7a6a85; --accent: #ffd0e8; --accent-dim: #ffd0e855;
-  --panel: url('../img/biomes/mushroom_panel.svg') 0 0 / 64px 64px, #d9cfe3; --pan-hi: #f3e9fa; --pan-lo: #8f7f9c;
-  --ink: #2a1f33; --ink-head: #1f1426; --ink-sub: #3d2f4a; --ink-acc: #b8353a; --ink-acc2: #5a3a7a;
-  --btn: #b8353a; --btn-hi: #e86a6a; --btn-lo: #7a1f24; --btn-hover: #d9a05a;
-  --frame: #b8353a; --deco: #ff6a6a; --deco2: #ffffff; --sign: #d9cfe3; --sign-ink: #2a1f33;
-  --p1: url('../img/biomes/mushroom_p1.svg'); --p1s: 256px 256px; --x1: 256px; --y1: -256px; --d1: 60s;
-  --p2: url('../img/biomes/mushroom_p2.svg'); --p2s: 256px 256px; --x2: -256px; --y2: -256px; --d2: 80s;
+  --plate: #f1e8f6; --rim: #8f7f9c; --tex: url('../img/biomes/mushroom_panel.svg'); --pan-hi: #f3e9fa; --pan-lo: #8f7f9c;
+  --ink: #2a1f33; --ink-head: #1f1426; --ink-sub: #3d2f4a; --ink-acc: #9a2a30; --ink-acc2: #5a3a7a;
+  --btn: #b8353a; --btn-hi: #e86a6a; --btn-lo: #7a1f24; --btn-hover: #8f2a2e; --btn-ink: #ffffff;
+  --frame: #b8353a; --deco: #ff6a6a; --deco2: #ffffff;
 }
 
-/* ==========================================================
-   TITLE SCREEN — THE OVERWORLD
-   ========================================================== */
-.title-body .sky {
-  background: linear-gradient(#4f9bff 0 22%, #5fa6ff 22% 40%, #78b6ff 40% 58%, #94c6ff 58% 76%, #b4d8ff 76% 100%);
+.title-body {
+  --far: url('../img/biomes/title_far.svg'); --mid: url('../img/biomes/title_mid.svg'); --near: url('../img/biomes/title_near.svg');
 }
-.title-body .sky::before {
-  content: ''; position: absolute; left: 0; right: 0; bottom: var(--ground-h); height: calc(448px * var(--sc, 1));
-  background: url('../img/biomes/title_far.svg') repeat-x 0 100% / auto 100%;
-}
-.title-body .ground {
-  background: url('../img/biomes/title_grass.svg') repeat-x 0 0 / 64px 64px, url('../img/biomes/title_dirt.svg') 0 0 / 64px 64px;
-  border-top: 0;
-}
-.title-body .ground::before {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(192px * var(--sc, 1)); pointer-events: none;
-  background: url('../img/biomes/title_near.svg') repeat-x 0 100% / auto 100%;
-}
-.title-body .cloud { box-shadow: 32px -32px 0 #fff, 64px -16px 0 #fff, 96px 0 0 #fff, 128px 0 0 #fff, 0 8px 0 #e4eefc; }
-
