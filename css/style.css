@@ -255,7 +255,7 @@ a, button, summary { touch-action: manipulation; }
   transition: transform .15s;
 }
 .photo .frame:hover { transform: translateY(-5px) rotate(-.6deg); }
-.photo img { width: 100%; height: 100%; object-fit: cover; padding: 8px; }
+.photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; padding: 8px; }
 .photo figcaption {
   margin-top: 18px; padding: 8px 12px; text-align: center; font-size: 22px;
   background: rgba(0,0,0,.6); border: 4px solid #000;
@@ -463,6 +463,11 @@ a, button, summary { touch-action: manipulation; }
   .hero-icon { font-size: 56px; }
   .block .label strong { font-size: 13px; }
   .mc-btn { font-size: 13px; padding: 12px 14px; }
+  .mc-btn.big { font-size: 18px; padding: 16px 32px; }
+  .title-main { gap: 12px; padding-left: 16px; padding-right: 16px; }
+  .logo { font-size: clamp(28px, 11vw, 56px); letter-spacing: 2px; }
+  .edition { font-size: clamp(9px, 2.8vw, 14px); }
+  .splash { font-size: clamp(10px, 2.8vw, 14px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
