@@ -50,6 +50,7 @@
   var y = 0, vy = 0, dir = 1;
   var target = null, keys = {}, bubbleTimer = 0, waveTimer = 0, hops = 0;
   var bubbleW = 0, lastT = '', lastDir = 0, lastWalk = null, lastBx = null;
+  var bodyRy = 25;           // current body yaw in degrees (idle 3/4 view, or +-90 while walking)
 
   var lines = [
     'Hi there, I\'m Mark!', 'Welcome to my world!', 'Press Play to begin!',
@@ -108,8 +109,17 @@
   model.appendChild(part('mc-limb a', 0, 8, 4, 12, [box(4, 12, 4, 40, 16)]));              // right arm
   var armL = part('mc-limb b wave', 12, 8, 4, 12, [box(4, 12, 4, 32, 48)]);               // left arm (wristband, waves)
   model.appendChild(armL);
-  model.appendChild(part('', 4, 0, 8, 8, [box(8, 8, 8, 0, 0), box(8, 8, 8, 32, 0, 1)]));   // head + hair layer
+  var headPart = part('mc-head', 4, 0, 8, 8, [box(8, 8, 8, 0, 0), box(8, 8, 8, 32, 0, 1)]);  // head + hair layer
+  model.appendChild(headPart);
   body.appendChild(model);
+
+  /* Small read-only handle for optional add-ons (js/headtrack.js): the head part, the
+   * character's position/scale/body yaw, and a hook that fires when any of those change. */
+  var api = window.MCHero = {
+    el: hero, model: model, head: headPart, onChange: null,
+    state: function () { return { x: x, y: y, S: S, ry: bodyRy }; }
+  };
+  function changed() { if (api.onChange) api.onChange(); }
 
   /* ---------------------------------------------------------- layout */
   function layout() {
@@ -119,6 +129,7 @@
     W = Math.round(BASE_W * S);
     hero.style.setProperty('--hs', S);
     lastT = '';                                       // force a redraw
+    changed();
   }
   window.addEventListener('resize', layout);
   window.addEventListener('orientationchange', layout);
@@ -221,11 +232,11 @@
     }
 
     var t = 'translate(' + x.toFixed(1) + 'px,' + (-y).toFixed(1) + 'px) scale(' + S + ')';
-    if (t !== lastT) { hero.style.transform = t; lastT = t; }
+    if (t !== lastT) { hero.style.transform = t; lastT = t; changed(); }
     var walking = !!move && y === 0;
     if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; lastDir = 0; }
     // walking = side view in the travel direction; idle = turn toward the viewer (3/4 view)
-    if (dir !== lastDir) { model.style.setProperty('--ry', (walking ? dir * 90 : dir * 25) + 'deg'); lastDir = dir; }
+    if (dir !== lastDir) { bodyRy = walking ? dir * 90 : dir * 25; model.style.setProperty('--ry', bodyRy + 'deg'); lastDir = dir; changed(); }
 
     // keep the speech bubble fully on screen (shift in character-local units)
     if (bubbleW && bubble.classList.contains('show')) {

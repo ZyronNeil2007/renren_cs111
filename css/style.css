@@ -602,6 +602,8 @@ a, button, summary { touch-action: manipulation; }
 .mc-model { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(var(--ry, 0deg)); transition: transform .28s ease-out; }
 .mc-part, .mc-box { position: absolute; transform-style: preserve-3d; }
 .mc-limb { transform-origin: 50% 0; }
+/* Head tracking (js/headtrack.js) turns only this part; the pivot is the neck. No transform at rest. */
+.mc-head { transform-origin: 50% 100% 0; }
 .mc-face {
   position: absolute; backface-visibility: hidden;
   background-image: url(../skins/mark.png); background-repeat: no-repeat;
