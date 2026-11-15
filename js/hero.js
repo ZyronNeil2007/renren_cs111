@@ -30,8 +30,8 @@
   pad.className = 'hc-pad';
   pad.innerHTML =
     '<div class="grp">' +
-      '<button type="button" class="mc-btn" data-k="left" aria-label="Walk left">&#9664;</button>' +
-      '<button type="button" class="mc-btn" data-k="right" aria-label="Walk right">&#9654;</button>' +
+      '<button type="button" class="mc-btn" data-k="left" aria-label="Walk left">&#9664;&#xFE0E;</button>' +
+      '<button type="button" class="mc-btn" data-k="right" aria-label="Walk right">&#9654;&#xFE0E;</button>' +
     '</div>' +
     '<div class="grp">' +
       '<button type="button" class="mc-btn" data-k="down" aria-label="Crouch (hold)">&#9660;</button>' +

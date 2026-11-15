@@ -29,9 +29,9 @@
     '<img alt="">' +
     '<div class="lb-cap"></div>' +
     '<div class="lb-bar">' +
-      '<button class="mc-btn" data-act="prev">&#9664; Prev</button>' +
+      '<button class="mc-btn" data-act="prev">&#9664;&#xFE0E; Prev</button>' +
       '<button class="mc-btn" data-act="close">Close</button>' +
-      '<button class="mc-btn" data-act="next">Next &#9654;</button>' +
+      '<button class="mc-btn" data-act="next">Next &#9654;&#xFE0E;</button>' +
     '</div>';
   document.body.appendChild(lb);
 
