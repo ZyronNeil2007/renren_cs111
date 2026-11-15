@@ -1,0 +1,253 @@
+/* ==========================================================
+   IN-WORLD CONTENT
+   Content never sits on a generic card: it lives on objects that belong to
+   each world (rack, gallery wall, rope bridge, alcoves, camp chests, journal,
+   jukebox, signs/books/boards).  All body text is on solid "reading plates"
+   (parchment or dark plate) - contrast verified >= 4.5:1 in tools/contrast.
+   Palette comes from css/biomes.css variables.
+   ========================================================== */
+
+/* ---------- shared: reading plates with a biome-textured rim ---------- */
+body[data-biome] .panel {
+  background: var(--plate); color: var(--ink);
+  border: 12px solid transparent; border-image: var(--tex) 16 / 12px round;
+  outline: 4px solid #000; outline-offset: -12px;
+  box-shadow: 0 0 0 4px #000, 0 12px 0 4px rgba(0,0,0,.22);
+  padding: 14px 18px;
+}
+body[data-biome] .hub-head h1, body[data-biome] .dish summary h2, body[data-biome] .movie-detail h2,
+body[data-biome] .why h2, body[data-biome] .game h2 { color: var(--ink-head); }
+body[data-biome] .dish summary span, body[data-biome] .movie-detail .meta { color: var(--ink-sub); }
+body[data-biome] .movie-cols h3, body[data-biome] .game .game-h3, body[data-biome] .joke .n, body[data-biome] .recipe h3 { color: var(--ink-acc); }
+body[data-biome] .game-tag, body[data-biome] .game-status { color: var(--ink-acc2); }
+body[data-biome] .movie-detail, body[data-biome] .joke, body[data-biome] .recipe { color: var(--ink); }
+body[data-biome] .clip-missing, body[data-biome] .recipe .tip, body[data-biome] .joke .a { color: #2a2118; }
+
+/* ---------- navigation bar, buttons, footer sign ---------- */
+body[data-biome] .topbar { background: var(--bar); box-shadow: inset 0 4px 0 var(--bar-hi), 0 4px 0 rgba(0,0,0,.25); }
+body[data-biome] .topbar-title { color: #fff; }
+body[data-biome] .topbar-title .biome { color: var(--accent); }
+body[data-biome] .mc-btn { background: var(--btn); color: var(--btn-ink); text-shadow: none; box-shadow: inset 4px 4px 0 var(--btn-hi), inset -4px -4px 0 var(--btn-lo); }
+body[data-biome] .mc-btn:hover, body[data-biome] .mc-btn:focus-visible { background: var(--btn-hover); color: #fff; box-shadow: inset 4px 4px 0 rgba(255,255,255,.35), inset -4px -4px 0 rgba(0,0,0,.35); }
+body[data-biome] .foot {
+  width: fit-content; max-width: calc(100% - 32px); margin: 36px auto 48px; padding: 12px 20px;
+  background: var(--plate); color: var(--ink); text-shadow: none; border: 4px solid #000;
+  box-shadow: inset 3px 3px 0 var(--pan-hi), inset -3px -3px 0 var(--pan-lo), 0 0 0 6px var(--rim), 0 0 0 10px #000;
+}
+body[data-biome] .foot b { color: var(--ink-acc); }
+
+/* ---------- accessibility: touch targets + a focus ring visible on any surface ---------- */
+.mc-btn, .track, .poster-btn, .reveal-btn, summary, .game button { min-height: 44px; min-width: 44px; }
+body[data-biome] :focus-visible { outline: 4px solid #ffff55; outline-offset: 4px; box-shadow: 0 0 0 4px #000; }
+.title-body :focus-visible { outline-color: #fff; box-shadow: 0 0 0 4px #000; }
+
+/* ---------- photo frames (all chapters): item-frame look + a tiny biome ornament ---------- */
+body[data-biome] .photo .frame { outline-color: var(--frame); }
+body[data-biome] .photo .frame::after {
+  content: ''; position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; z-index: 2; pointer-events: none;
+  background: var(--deco); box-shadow: -16px 8px 0 var(--deco2), -6px 24px 0 var(--deco), -22px 28px 0 var(--deco2);
+}
+
+/* ==========================================================
+   WELCOME - PLAINS: destinations are signposts along a dirt path
+   ========================================================== */
+.hub-head .pv { margin-top: 18px; }
+.pv {
+  position: relative; height: 150px; border: 4px solid #000; overflow: hidden;
+  background:
+    var(--ceil) 0 0 / auto calc(var(--ceil-h, 0px) * .4) repeat-x,
+    var(--near) 0 100% / auto 72px repeat-x,
+    var(--mid)  0 calc(100% - 28px) / auto 150px repeat-x,
+    var(--far)  0 calc(100% - 22px) / auto 168px repeat-x,
+    var(--sky-stack);
+}
+.pv-label {
+  position: absolute; left: 8px; bottom: 8px; padding: 4px 12px; font-size: 20px; color: #fff;
+  background: rgba(8,8,12,.82); border: 3px solid #000;
+}
+body[data-biome='plains'] .grid { position: relative; row-gap: 120px; padding: 34px 0; }
+body[data-biome='plains'] .grid::before {            /* the dirt path every signpost leads to */
+  content: ''; position: absolute; left: -24px; right: -24px; top: 50%; height: 76px; margin-top: -38px;
+  background: url('../img/biomes/tex_path.svg') 0 0 / 64px 64px; image-rendering: pixelated;
+  border-block: 4px solid #000; box-shadow: 0 8px 0 rgba(0,0,0,.18);
+}
+body[data-biome='plains'] .block:nth-child(-n+4)::after, body[data-biome='plains'] .block:nth-child(n+5)::before {   /* signpost stems */
+  content: ''; position: absolute; left: 50%; width: 18px; height: 40px; margin-left: -9px; z-index: -1;
+  background: #8a5a2b; border: 4px solid #000; box-shadow: inset 4px 0 0 #a8743a, inset -4px 0 0 #6b4520;
+}
+body[data-biome='plains'] .block:nth-child(-n+4)::after { top: 100%; border-top: 0; }
+body[data-biome='plains'] .block:nth-child(n+5)::before { bottom: 100%; border-bottom: 0; }
+body[data-biome='plains'] .block .label { background: #c9a468; border-color: #000; box-shadow: inset 3px 3px 0 #e2c68c, inset -3px -3px 0 #8a6a3a; }
+body[data-biome='plains'] .block .label strong { color: #1f1710; text-shadow: none; }
+body[data-biome='plains'] .block .label small { color: #3a2d1f; }
+body[data-biome='plains'] .block:hover .label, body[data-biome='plains'] .block:focus-visible .label { background: #d9b67a; }
+@media (max-width: 760px) {
+  body[data-biome='plains'] .grid { row-gap: 40px; }
+  body[data-biome='plains'] .grid::before, body[data-biome='plains'] .block::before, body[data-biome='plains'] .block::after { display: none; }
+}
+
+/* ==========================================================
+   CHAPTER 1 - CHERRY GROVE: a wooden photo rack with polaroids pinned on
+   ========================================================== */
+body[data-biome='cherry'] .gallery { position: relative; padding-top: 44px; row-gap: 40px; }
+body[data-biome='cherry'] .gallery::before {
+  content: ''; position: absolute; left: -12px; right: -12px; top: 8px; height: 18px;
+  background: var(--tex) 0 0 / 64px 64px; border: 4px solid #000; box-shadow: 0 6px 0 rgba(0,0,0,.25);
+}
+body[data-biome='cherry'] .photo { position: relative; }
+body[data-biome='cherry'] .photo::before {            /* clothes-peg */
+  content: ''; position: absolute; top: -40px; left: 50%; width: 14px; height: 36px; margin-left: -7px; z-index: 3;
+  background: #f0dcaa; border: 3px solid #000; box-shadow: inset 3px 0 0 #fff4d0;
+}
+body[data-biome='cherry'] .photo .frame { background: #fffaf0; outline: 14px solid #fffaf0; outline-offset: -8px; }
+body[data-biome='cherry'] .photo:nth-child(odd) .frame { transform: rotate(-1.4deg); }
+body[data-biome='cherry'] .photo:nth-child(even) .frame { transform: rotate(1.2deg); }
+body[data-biome='cherry'] .photo .frame:hover { transform: translateY(-5px) rotate(0deg); }
+
+/* ==========================================================
+   CHAPTER 2 - LUSH CAVES: a cosy underground gallery wall, frames lit by glow berries
+   ========================================================== */
+body[data-biome='lush'] .gallery {
+  position: relative; padding: 44px 30px 36px; row-gap: 44px;
+  background: url('../img/biomes/tex_stone.svg') 0 0 / 64px 64px; background-color: #3a4a3a; background-blend-mode: multiply;
+  border: 4px solid #000; box-shadow: inset 0 0 0 4px #223022, inset 0 -18px 0 0 rgba(79,122,46,.85), 0 10px 0 rgba(0,0,0,.3);
+}
+body[data-biome='lush'] .gallery::before {            /* moss dripping from the ceiling */
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 14px; background: #4f7a2e;
+  box-shadow: 0 0 0 0 #000, inset 0 -6px 0 #3f6a24;
+}
+body[data-biome='lush'] .photo { position: relative; margin-top: 22px; }
+body[data-biome='lush'] .photo::before {              /* hanging vine + glow berry */
+  content: ''; position: absolute; top: -22px; left: 50%; width: 6px; height: 22px; z-index: 3;
+  background: #2e8b3a; box-shadow: 8px 6px 0 #2e8b3a, -8px 10px 0 #1e7a2a, 0 18px 0 6px #ffd84a;
+}
+
+/* ==========================================================
+   CHAPTER 3 - JUNGLE: boards hung from a rope bridge between the trees
+   ========================================================== */
+body[data-biome='jungle'] .gallery { position: relative; padding: 30px 0 64px; row-gap: 56px; }
+body[data-biome='jungle'] .gallery::before {          /* the rope */
+  content: ''; position: absolute; left: -12px; right: -12px; top: 8px; height: 10px; background: #c9a36b;
+  border-block: 3px solid #000; box-shadow: 0 6px 0 rgba(0,0,0,.2);
+}
+body[data-biome='jungle'] .gallery::after {           /* the bridge planks */
+  content: ''; position: absolute; left: -12px; right: -12px; bottom: 0; height: 28px;
+  background: var(--tex) 0 0 / 64px 64px; border: 4px solid #000; box-shadow: 0 8px 0 rgba(0,0,0,.25);
+}
+body[data-biome='jungle'] .photo { position: relative; margin-top: 26px; }
+body[data-biome='jungle'] .photo:nth-child(even) { margin-top: 56px; }
+body[data-biome='jungle'] .photo::before {            /* hanging rope */
+  content: ''; position: absolute; top: -30px; left: 50%; width: 8px; height: 30px; margin-left: -4px; z-index: 3;
+  background: #c9a36b; border-inline: 3px solid #000;
+}
+
+/* ==========================================================
+   CHAPTER 4 - WARM OCEAN: each photo rests in a conduit-lit alcove
+   ========================================================== */
+body[data-biome='ocean'] .gallery { row-gap: 40px; }
+body[data-biome='ocean'] .photo {
+  padding: 14px 14px 12px; background: #06314f; border: 4px solid #000; outline: 4px solid #0b6b8f; outline-offset: -4px;
+  box-shadow: inset 0 0 26px rgba(111,227,255,.4), 0 0 18px rgba(111,227,255,.45);
+  animation: bobframe 5s ease-in-out infinite alternate;
+}
+body[data-biome='ocean'] .photo:nth-child(2n) { animation-delay: -2s; }
+body[data-biome='ocean'] .photo:nth-child(3n) { animation-delay: -3.5s; }
+body[data-biome='ocean'] .photo .frame { outline-color: #6fe3ff; }
+body[data-biome='ocean'] .photo figcaption { margin-top: 12px; }
+@keyframes bobframe { to { translate: 0 -6px; } }
+
+/* ==========================================================
+   CHAPTER 5 - BADLANDS: a camp - each dish is a chest, the recipe a board
+   ========================================================== */
+body[data-biome='badlands'] .dishes { grid-template-columns: repeat(2, 1fr); gap: 56px 34px; padding-top: 18px; }
+body[data-biome='badlands'] .dish[open] { grid-column: 1 / -1; }
+body[data-biome='badlands'] .dish { position: relative; }
+body[data-biome='badlands'] .dish::before {           /* camp furniture sitting on the rim */
+  content: ''; position: absolute; top: -34px; right: 26px; width: 48px; height: 48px; z-index: 3; pointer-events: none;
+  background: url('../img/biomes/obj_chest.svg') 0 0 / 100% 100%; image-rendering: pixelated;
+}
+body[data-biome='badlands'] .dish:nth-child(3n+2)::before { background-image: url('../img/biomes/obj_crafting.svg'); }
+body[data-biome='badlands'] .dish:nth-child(3n+3)::before { background-image: url('../img/biomes/obj_furnace.svg'); }
+body[data-biome='badlands'] .dishes::after {
+  content: ''; position: absolute; left: 50%; margin-left: -24px; top: 0; width: 48px; height: 48px;
+  background: url('../img/biomes/obj_campfire.svg') 0 0 / 100% 100%; image-rendering: pixelated;
+}
+body[data-biome='badlands'] .dishes { position: relative; }
+body[data-biome='badlands'] .dish .recipe { border-top: 4px dashed var(--rim); background: rgba(255,255,255,.28); }
+@media (max-width: 860px) { body[data-biome='badlands'] .dishes { grid-template-columns: 1fr; } body[data-biome='badlands'] .dishes::after { display: none; } }
+
+/* ==========================================================
+   CHAPTER 6 - THE END: posters are portal frames; details are an explorer's journal
+   ========================================================== */
+body[data-biome='end'] .posters { align-items: start; padding-bottom: 20px; }
+body[data-biome='end'] .poster-btn {
+  background: #0d0817; border: 4px solid #000; position: relative;
+  box-shadow: 0 0 0 4px #000, 0 0 0 8px #3b2a5a, 0 0 18px 8px rgba(199,125,255,.5);
+  animation: bobframe 6s ease-in-out infinite alternate;
+}
+body[data-biome='end'] .poster-btn:nth-child(even) { margin-top: 22px; animation-delay: -3s; }
+body[data-biome='end'] .poster-btn:hover { box-shadow: 0 0 0 4px #000, 0 0 0 8px #5a3f8a, 0 0 28px 10px rgba(224,180,255,.8); }
+body[data-biome='end'] .poster-btn span { background: #1c1030; color: #efe6ff; }
+body[data-biome='end'] .movie-detail {
+  --ink: #2a2118; --ink-head: #1f1710; --ink-sub: #4a3a26; --ink-acc: #2a6a1a; --ink-acc2: #8a2a5a;
+  background: #f1e3bd; border: 8px solid #3a2a1c; border-image: none; outline: 3px solid #000; outline-offset: -8px;
+  box-shadow: 0 0 0 4px #000, inset 0 0 0 4px #c9b88a, 0 0 24px 6px rgba(199,125,255,.35);
+  background-image: linear-gradient(90deg, transparent calc(50% - 8px), rgba(60,40,20,.14) calc(50% - 8px) calc(50% + 2px), transparent calc(50% + 2px));
+}
+body[data-biome='end'] .movie-detail::before {          /* ribbon bookmark */
+  content: ''; position: absolute; top: -4px; right: 40px; width: 16px; height: 44px; background: #9a1f24; border: 3px solid #000; border-top: 0;
+}
+body[data-biome='end'] .movie-detail { position: relative; }
+
+/* ==========================================================
+   CHAPTER 7 - SOUL SAND VALLEY: the karaoke player is a jukebox, tracks are note blocks
+   ========================================================== */
+body[data-biome='soul'] .player {
+  position: relative; padding: 38px 24px 26px; color: #f4ead0;
+  background: #3a2a1c; border: 4px solid #000;
+  box-shadow: inset 0 0 0 6px #5a4026, inset 0 0 0 10px #2a1d14, 0 0 0 4px #000, 0 12px 0 4px rgba(0,0,0,.3), 0 0 22px rgba(111,227,255,.25);
+}
+body[data-biome='soul'] .player::before {
+  content: ''; position: absolute; top: -34px; right: 30px; width: 56px; height: 56px;
+  background: url('../img/biomes/obj_jukebox.svg') 0 0 / 100% 100%; image-rendering: pixelated;
+}
+body[data-biome='soul'] .now small, body[data-biome='soul'] .time { color: #f4ead0; }
+body[data-biome='soul'] .tracks { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+body[data-biome='soul'] .track { background: #7a5a35; box-shadow: inset 3px 3px 0 #a07a45, inset -3px -3px 0 #4a3520; }
+body[data-biome='soul'] .track:hover { background: #2d6a8f; }
+body[data-biome='soul'] .track b { background: #2a1d14; color: #ffd84a; padding: 4px 8px; border: 2px solid #000; }
+
+/* ==========================================================
+   CHAPTER 8 - MUSHROOM FIELDS: jokes on signs, in books and on wooden boards
+   ========================================================== */
+body[data-biome='mushroom'] .jokes { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); align-items: start; gap: 52px 34px; }
+body[data-biome='mushroom'] .joke { position: relative; }
+body[data-biome='mushroom'] .joke:nth-child(3n+1) { transform: rotate(-1deg); }                         /* oak sign on a post */
+body[data-biome='mushroom'] .joke:nth-child(3n+1)::after {
+  content: ''; position: absolute; left: 50%; top: calc(100% + 10px); width: 20px; height: 44px; margin-left: -10px; z-index: -1;
+  background: #8a5a2b; border: 4px solid #000; border-top: 0; box-shadow: inset 4px 0 0 #a8743a;
+}
+body[data-biome='mushroom'] .joke:nth-child(3n+2) {                                                      /* written book */
+  border-image: none; border: 4px solid #000; border-left: 24px solid #7a1f24; outline: 0; background: #f3e7c6;
+  box-shadow: inset -8px 0 0 #d8c9a0, 8px 8px 0 rgba(0,0,0,.25); transform: rotate(.6deg);
+}
+body[data-biome='mushroom'] .joke:nth-child(3n+3) {                                                      /* wooden board */
+  border-image: none; border: 10px solid #8a5a2b; outline: 4px solid #000; outline-offset: -10px; transform: rotate(.8deg);
+  box-shadow: 0 0 0 4px #000, 6px 10px 0 4px rgba(0,0,0,.2);
+}
+body[data-biome='mushroom'] .joke:nth-child(3n+3)::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(#555, #555) 4px 4px / 8px 8px no-repeat, linear-gradient(#555, #555) calc(100% - 4px) 4px / 8px 8px no-repeat,
+    linear-gradient(#555, #555) 4px calc(100% - 4px) / 8px 8px no-repeat, linear-gradient(#555, #555) calc(100% - 4px) calc(100% - 4px) / 8px 8px no-repeat;
+}
+body[data-biome='mushroom'] .photo .frame { outline-color: var(--frame); }
+@media (prefers-reduced-motion: reduce) {
+  body[data-biome='ocean'] .photo, body[data-biome='end'] .poster-btn { animation: none; }
+}
+
+/* phones: keep the Plains preview label to one slim line so the biome stays visible */
+@media (max-width: 560px) {
+  .pv { height: 170px; }
+  .pv-label { left: 6px; right: 6px; bottom: 6px; padding: 2px 8px; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}

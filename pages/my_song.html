@@ -6,13 +6,23 @@
   <title>My Song · Life Craft</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/biomes.css">
+  <link rel="stylesheet" href="../css/scene.css">
+  <link rel="stylesheet" href="../css/world-objects.css">
   <script src="../js/transition.js"></script>
 </head>
 <body data-biome="soul" style="--c:#2b4a63; --c2:#1e3550;">
+  <div class="scene" aria-hidden="true">
+    <div class="layer layer-sky"></div>
+    <div class="layer layer-ceil"></div>
+    <div class="layer layer-far" data-speed=".25"></div>
+    <div class="layer layer-mid" data-speed=".55"></div>
+    <div class="layer layer-near" data-speed="1"></div>
+    <div class="layer-fx"></div>
+  </div>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <a class="mc-btn" data-morph data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664; World</a>
+    <a class="mc-btn" data-morph data-biome="plains" data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664; World</a>
     <span class="topbar-title">CHAPTER 7 / 8 &middot; <span class="biome">SOUL SAND VALLEY</span></span>
   </header>
 
@@ -67,13 +77,14 @@
     </section>
 
     <nav class="pager">
-      <a class="mc-btn" data-morph data-world="the End" href="my_favorite_movie.html" style="--c:#4a2a7a; --c2:#2f1a52;">&#9664; Movies</a>
-      <a class="mc-btn" data-morph data-world="the Mushroom Fields" href="joke_time.html" style="--c:#b8353a; --c2:#8f2a2e;">Joke Time &#9654;</a>
+      <a class="mc-btn" data-morph data-biome="end" data-world="the End" href="my_favorite_movie.html" style="--c:#4a2a7a; --c2:#2f1a52;">&#9664; Movies</a>
+      <a class="mc-btn" data-morph data-biome="mushroom" data-world="the Mushroom Fields" href="joke_time.html" style="--c:#b8353a; --c2:#8f2a2e;">Joke Time &#9654;</a>
     </nav>
   </main>
 
   <footer class="foot">You are exploring the <b>Soul Sand Valley</b> &middot; chapter 7 of 8</footer>
 
+  <script src="../js/scene.js"></script>
   <script src="../js/pages.js"></script>
   <script src="../js/games.js"></script>
 </body>
