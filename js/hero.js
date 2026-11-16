@@ -55,6 +55,8 @@
   var crouching = false, lastCrouch = null;   // sneak: hold the down arrow / S / the pad's down button
   var SNEAK_SPEED = 0.35;    // Minecraft sneaks at about a third of walking speed
   var SNEAK_DROP = 21;       // how far the head drops in the sneak pose (px at scale 1)
+  var stepMs = 0;            // time since the last footstep event
+  function stepEvery() { return crouching ? 1200 : 450; }   // matches the CSS swing duration
 
   var lines = [
     'Hi there, I\'m Mark!', 'Welcome to my world!', 'Press Play to begin!',
@@ -124,6 +126,11 @@
     state: function () { return { x: x, y: y, S: S, ry: bodyRy, drop: crouching ? SNEAK_DROP : 0 }; }
   };
   function changed() { if (api.onChange) api.onChange(); }
+  /* Tell the rest of the page what the character just did. js/sound.js and js/advancements.js
+   * listen for these; nothing else depends on them. */
+  function emit(type, extra) {
+    try { window.dispatchEvent(new CustomEvent('mc:event', { detail: Object.assign({ type: type }, extra || {}) })); } catch (e) {}
+  }
 
   /* ---------------------------------------------------------- layout */
   function layout() {
@@ -153,7 +160,7 @@
     waveTimer = setTimeout(function () { hero.classList.remove('waving'); }, 1200);
   }
   function jump() {
-    if (y === 0) { vy = 15; hops++; if (hops === 5) { say('Whee! Boing!'); hops = 0; } }
+    if (y === 0) { vy = 15; hops++; emit('jump'); if (hops === 5) { say('Whee! Boing!'); hops = 0; } }
   }
   function talk() {
     wave();
@@ -237,14 +244,18 @@
 
     if (y > 0 || vy > 0) {
       y += vy * dt; vy -= 0.9 * dt;
-      if (y <= 0) { y = 0; vy = 0; }
+      if (y <= 0) { y = 0; vy = 0; emit('land'); }
     }
 
     var t = 'translate(' + x.toFixed(1) + 'px,' + (-y).toFixed(1) + 'px) scale(' + S + ')';
     if (t !== lastT) { hero.style.transform = t; lastT = t; changed(); }
-    if (crouching !== lastCrouch) { hero.classList.toggle('crouching', crouching); lastCrouch = crouching; changed(); }
+    if (crouching !== lastCrouch) { hero.classList.toggle('crouching', crouching); lastCrouch = crouching; changed(); if (crouching) emit('crouch'); }
     var walking = !!move && y === 0;
-    if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; lastDir = 0; }
+    if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; lastDir = 0; stepMs = stepEvery() * 0.5; }
+    if (walking) {                                    // a footstep each time a foot lands (the swing is 450 ms per step)
+      stepMs += dt * 16.67;
+      if (stepMs >= stepEvery()) { stepMs = 0; emit('step', { v: crouching ? 0.35 : 1 }); }
+    }
     // walking = side view in the travel direction; idle = turn toward the viewer (3/4 view)
     if (dir !== lastDir) { bodyRy = walking ? dir * 90 : dir * 25; model.style.setProperty('--ry', bodyRy + 'deg'); lastDir = dir; changed(); }
 
