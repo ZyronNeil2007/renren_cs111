@@ -134,3 +134,69 @@ body.title-body > .sfx-toggle {
 .mine-bit { position: absolute; will-change: transform; }
 .mine-item { position: absolute; width: 14px; height: 14px; border: 2px solid rgba(0, 0, 0, .55); will-change: transform; }
 .mine-pop { position: absolute; font-family: var(--font-title); font-size: 16px; color: #fff; text-shadow: 2px 2px 0 #000; white-space: nowrap; transform: translate(-50%, 0); }
+
+/* ==========================================================
+   DAY / NIGHT on the title screen (js/daynight.js sets the variables)
+   ========================================================== */
+.title-body .sky {
+  background: linear-gradient(var(--tod-1, #4f9bff) 0 22%, var(--tod-2, #5fa6ff) 22% 40%, var(--tod-3, #78b6ff) 40% 58%,
+                              var(--tod-4, #94c6ff) 58% 76%, var(--tod-5, #b4d8ff) 76% 100%);
+}
+.tod-stars { position: absolute; left: 0; right: 0; top: 0; height: 62%; opacity: var(--tod-stars, 0); pointer-events: none; }
+.tod-stars i { position: absolute; background: #fff; animation: twinkle 3.2s steps(2, end) infinite alternate; }
+.tod-stars .s1 { width: 3px; height: 3px; opacity: .8; }
+.tod-stars .s2 { width: 4px; height: 4px; }
+.tod-stars .s3 { width: 6px; height: 6px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .25); }
+@keyframes twinkle { from { opacity: 1; } to { opacity: .3; } }
+
+.tod-orb {
+  --sz: calc(64px * var(--sc, 1));
+  position: absolute; width: var(--sz); height: var(--sz); opacity: 0; pointer-events: none;
+  left: calc(var(--ox, 50) * 1% - var(--sz) / 2); top: calc(var(--oy, 60) * 1% - var(--sz) / 2);
+}
+.tod-sun {                                       /* the square Minecraft sun */
+  background: #ffe45c;
+  box-shadow: inset 0 0 0 calc(7px * var(--sc, 1)) #fff3a8, 0 0 0 calc(7px * var(--sc, 1)) rgba(255, 228, 92, .3), 0 0 70px rgba(255, 225, 110, .5);
+}
+.tod-moon {                                      /* ... and the square moon, with craters */
+  background: #e8edff;
+  box-shadow: inset 0 0 0 calc(5px * var(--sc, 1)) #cdd6f6, inset calc(18px * var(--sc, 1)) calc(14px * var(--sc, 1)) 0 calc(-6px * var(--sc, 1)) #c3cdf2,
+              inset calc(-14px * var(--sc, 1)) calc(-18px * var(--sc, 1)) 0 calc(-4px * var(--sc, 1)) #c3cdf2, 0 0 60px rgba(190, 205, 255, .35);
+}
+.tod-tint { position: absolute; inset: 0; background: rgba(6, 10, 44, var(--tod-tint, 0)); pointer-events: none; }
+.title-body .cloud { opacity: calc(1 - var(--tod-night, 0) * .6); }
+.title-body[data-tod]:not([data-tod='day']) .hero-char { filter: brightness(var(--tod-bright, 1)); }
+
+/* two standing torches either side of the Play sign, lit from dusk to dawn */
+.tod-torches {
+  position: fixed; left: 0; right: 0; bottom: var(--ground-h, 190px); height: 0; z-index: 1; pointer-events: none;
+  opacity: var(--lit, 0); visibility: hidden;
+}
+.tod-torches.lit { visibility: visible; }
+.tod-torch { position: absolute; bottom: -6px; width: 12px; height: 44px; background: linear-gradient(90deg, #6b4520 0 34%, #8a5a2b 34% 68%, #a8743a 68%); transform-origin: 50% 100%; scale: var(--sc, 1); }
+.tod-torch.l { left: calc(50% - 215px); }
+.tod-torch.r { left: calc(50% + 203px); }
+.tod-torch b {                                   /* the flame, and its glow */
+  position: absolute; left: -2px; bottom: calc(100% - 2px); width: 16px; height: 16px; background: #ff9d1a;
+  box-shadow: inset 4px 4px 0 #ffd24d, inset -4px -4px 0 #e0641a; transform-origin: 50% 100%; animation: torch .5s steps(2, end) infinite;
+}
+.tod-torch b::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 175, 70, .4), rgba(255, 175, 70, .14) 40%, rgba(255, 175, 70, 0) 68%); animation: glow 1.3s ease-in-out infinite alternate;
+}
+@keyframes torch { from { transform: scale(1, 1); } to { transform: scale(.88, 1.14); } }
+@keyframes glow { from { opacity: .8; } to { opacity: 1; } }
+@media (max-width: 700px) { .tod-torch.l { left: calc(50% - 150px); } .tod-torch.r { left: calc(50% + 138px); } }
+@media (max-width: 420px) { .tod-torch.l { left: calc(50% - 128px); } .tod-torch.r { left: calc(50% + 116px); } }
+
+/* ==========================================================
+   BIOME WEATHER (rain on the Plains, ash haze in the Soul Sand Valley; js/scene.js)
+   ========================================================== */
+.fx-rain, .fx-gloom { position: absolute; inset: 0; pointer-events: none; }
+.fx-rain { animation: fx-shower 80s linear -3s infinite; }          /* a shower of ~45 s, then a dry spell */
+.fx-rain.is-steady { animation: none; }                             /* ?weather=rain */
+.fx-gloom.plains { background: rgba(58, 72, 100, .24); opacity: 0; animation: fx-shower 80s linear -3s infinite; }
+.fx-gloom.plains.is-steady { animation: none; opacity: 1; }
+@keyframes fx-shower { 0% { opacity: 0; } 6% { opacity: 1; } 55% { opacity: 1; } 66% { opacity: 0; } 100% { opacity: 0; } }
+.fx-gloom.soul { background: radial-gradient(ellipse at 50% 100%, rgba(255, 120, 60, .16), rgba(70, 55, 85, .14) 70%); opacity: .55; animation: haze 9s ease-in-out infinite alternate; }
+@keyframes haze { from { opacity: .35; } to { opacity: .8; } }

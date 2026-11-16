@@ -16,18 +16,22 @@
 
   // sprite sizes in cells (1 cell = 2px at natural size)
   var DIM = { petal: [3, 3], leaf: [4, 4], bubble: [5, 5], glow: [5, 5], spore: [3, 3], pollen: [2, 2], dust: [3, 2],
-              endspark: [3, 3], ember: [3, 3], ash: [2, 2], spore2: [3, 3], cloud: [11, 4], fish: [8, 4], flame: [5, 6], mush: [5, 5] };
+              endspark: [3, 3], ember: [3, 3], ash: [2, 2], spore2: [3, 3], cloud: [11, 4], fish: [8, 4], flame: [5, 6], mush: [5, 5], rain: [1, 6] };
 
   // [sprite, count, mode, options]   (total is capped: ~30 desktop, 12 small screens)
   var FX = {
-    plains:   [['cloud', 3, 'swim', { m: [7, 11], top: [4, 30], dur: [110, 170] }], ['pollen', 9, 'drift', { m: [3, 5], dur: [18, 32] }]],
+    // rain: weather, not decoration, so it has its own budget (own: [desktop, small]) and comes in showers
+    plains:   [['cloud', 3, 'swim', { m: [7, 11], top: [4, 30], dur: [110, 170] }], ['pollen', 6, 'drift', { m: [3, 5], dur: [18, 32] }],
+               ['rain', 90, 'fall', { m: [3, 4], dur: [0.6, 0.95], dx: [-6, -3], own: [90, 18] }]],
     cherry:   [['petal', 22, 'fall', { m: [3, 5], dur: [9, 16], dx: [-14, 14] }]],
     lush:     [['glow', 9, 'pulse', { m: [3, 5], top: [8, 62] }], ['spore', 9, 'rise', { m: [2, 4], dur: [22, 36], dx: [-6, 6] }]],
     jungle:   [['leaf', 14, 'fall', { m: [3, 5], dur: [10, 18], dx: [-16, 10] }]],
-    ocean:    [['bubble', 14, 'rise', { m: [2, 4], dur: [12, 24], dx: [-4, 4] }], ['fish', 4, 'swim', { m: [4, 6], top: [22, 62], dur: [36, 60], dy: [-4, 4] }]],
+    // bubbles rise in a few columns from the sea floor, like Minecraft bubble columns
+    ocean:    [['bubble', 15, 'rise', { m: [2, 4], dur: [10, 15], dx: [-2, 2], cols: [9, 47, 83] }], ['fish', 4, 'swim', { m: [4, 6], top: [22, 62], dur: [36, 60], dy: [-4, 4] }]],
     badlands: [['dust', 14, 'drift', { m: [3, 5], dur: [9, 16], dy: [-3, 8] }]],
     end:      [['endspark', 18, 'rise', { m: [2, 4], dur: [26, 50], dx: [-5, 5] }]],
-    soul:     [['ember', 8, 'rise', { m: [2, 4], dur: [18, 32], dx: [-6, 6] }], ['ash', 10, 'fall', { m: [2, 4], dur: [18, 30], dx: [-10, 4] }], ['flame', 5, 'flicker', { m: [4, 6] }]],
+    // ashfall: a steady, wind-slanted drift of ash, with only a few embers
+    soul:     [['ember', 6, 'rise', { m: [2, 4], dur: [18, 32], dx: [-6, 6] }], ['ash', 26, 'fall', { m: [2, 5], dur: [11, 20], dx: [-22, -6] }], ['flame', 5, 'flicker', { m: [4, 6] }]],
     mushroom: [['spore2', 12, 'rise', { m: [2, 4], dur: [26, 44], dx: [-8, 8] }], ['mush', 4, 'bounce', { m: [4, 6] }]]
   };
 
@@ -41,13 +45,26 @@
     var host = scene && scene.querySelector('.layer-fx');
     var cfg = FX[biome];
     if (!host || !cfg || reduce) return;
+    var weather = (/[?&]weather=(\w+)/.exec(location.search) || [])[1];     // ?weather=clear | rain, for previews
     var cap = small() ? 12 : 30, total = 0;
-    cfg.forEach(function (c) { total += c[1]; });
+    cfg.forEach(function (c) { if (!(c[3] && c[3].own)) total += c[1]; });
     var k = Math.min(1, cap / total);
     var frag = document.createDocumentFragment();
+    var showers = null;
+    if (biome === 'plains' && weather !== 'clear') {                     // a grey, rainy mood that comes and goes with the showers
+      showers = document.createElement('div');
+      showers.className = 'fx-rain' + (weather === 'rain' ? ' is-steady' : '');
+      var gloom = document.createElement('div');
+      gloom.className = 'fx-gloom plains' + (weather === 'rain' ? ' is-steady' : '');
+      frag.appendChild(gloom);
+    } else if (biome === 'soul') {
+      var haze = document.createElement('div'); haze.className = 'fx-gloom soul'; frag.appendChild(haze);
+    }
     cfg.forEach(function (c) {
-      var n = Math.max(1, Math.round(c[1] * k)), sprite = c[0], mode = c[2], o = c[3] || {};
-      if (total * k > cap && n > 1) n--;
+      var sprite = c[0], mode = c[2], o = c[3] || {};
+      if (sprite === 'rain' && !showers) return;
+      var n = o.own ? (small() ? o.own[1] : o.own[0]) : Math.max(1, Math.round(c[1] * k));
+      if (!o.own && total * k > cap && n > 1) n--;
       for (var i = 0; i < n; i++) {
         var el = document.createElement('i');
         var m = rand(o.m[0], o.m[1]), d = DIM[sprite];
@@ -55,10 +72,11 @@
         el.style.width = Math.round(d[0] * m) + 'px';
         el.style.height = Math.round(d[1] * m) + 'px';
         el.style.backgroundImage = 'url(' + ART + 'fx_' + sprite + '.svg)';
-        el.style.left = rand(2, 96).toFixed(1) + '%';
+        el.style.left = (o.cols ? o.cols[i % o.cols.length] + rand(-2, 2) : rand(2, 96)).toFixed(1) + '%';
         var dur = o.dur ? rand(o.dur[0], o.dur[1]) : 4;
         el.style.setProperty('--dur', dur.toFixed(1) + 's');
-        el.style.setProperty('--delay', (-rand(0, dur)).toFixed(1) + 's');   // desync: scene starts already alive
+        // desync: the scene starts already alive (bubble columns are spaced evenly so each stream is steady)
+        el.style.setProperty('--delay', (o.cols ? -(i / n) * dur : -rand(0, dur)).toFixed(1) + 's');
         if (o.dx) el.style.setProperty('--dx', pick(o.dx) + 'vw');
         if (o.dy) el.style.setProperty('--dy', pick(o.dy) + 'vh');
         if (mode === 'drift') el.style.top = rand(12, 78).toFixed(0) + '%', el.style.left = '0';
@@ -68,9 +86,10 @@
           el.style.top = 'auto';
           el.style.bottom = 'calc(88px * var(--sc))';
         }
-        frag.appendChild(el);
+        (sprite === 'rain' ? showers : frag).appendChild(el);
       }
     });
+    if (showers) frag.appendChild(showers);
     host.appendChild(frag);
   }
 

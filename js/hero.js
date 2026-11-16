@@ -52,6 +52,7 @@
   var target = null, keys = {}, bubbleTimer = 0, waveTimer = 0, hops = 0;
   var bubbleW = 0, lastT = '', lastWalk = null, lastBx = null;
   var bodyRy = 25;           // current body yaw in degrees (idle 3/4 view, or +-90 while walking)
+  var ryInit = false;        // the --ry variable is written on the first frame, then only when the yaw changes
   var crouching = false, lastCrouch = null;   // sneak: hold the down arrow / S / the pad's down button
   var SNEAK_SPEED = 0.35;    // Minecraft sneaks at about a third of walking speed
   var SNEAK_DROP = 21;       // how far the head drops in the sneak pose (px at scale 1)
@@ -281,7 +282,7 @@
     }
     // walking = side view in the travel direction; idle = turn toward the viewer (3/4 view)
     var wantRy = walking ? dir * 90 : api.yawOverride !== null ? api.yawOverride : dir * 25;
-    if (wantRy !== bodyRy) { bodyRy = wantRy; model.style.setProperty('--ry', bodyRy + 'deg'); changed(); }
+    if (wantRy !== bodyRy || !ryInit) { ryInit = true; bodyRy = wantRy; model.style.setProperty('--ry', bodyRy + 'deg'); changed(); }
     if (api.onFrame) api.onFrame(now);
 
     // keep the speech bubble fully on screen (shift in character-local units)
