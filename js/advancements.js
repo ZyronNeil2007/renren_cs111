@@ -61,7 +61,7 @@
     { id: 'hop',      icon: 'px-spring', c: '#8fe3ff', name: 'Bunny Hop',             desc: 'Jump 10 times', test: function () { return (adv.n.jump || 0) >= 10; }, prog: function () { return [Math.min(10, adv.n.jump || 0), 10]; } },
     { id: 'nap',      icon: 'px-zzz',    c: '#bfc8ff', name: 'Sleeping on the Job',   desc: 'Let Mark doze off on the title screen' }
   ].concat(GAMES).concat([
-    { id: 'diamond',  icon: 'px-gem',    c: '#35d6c3', name: 'Diamonds!',             desc: 'Mine a diamond in Mine a Block', test: function () { return (inv().diamond || 0) > 0; } },
+    { id: 'diamond',  icon: 'px-gem',    c: '#35d6c3', name: 'Diamonds!',             desc: 'Mine a diamond, on the title screen or in Mine a Block', test: function () { return (inv().diamond || 0) > 0; } },
     { id: 'creeper',  icon: 'px-creeper', c: '#55ff55', name: 'Creeper Slayer',       desc: 'Beat the creeper at Tic-Tac-Toe', test: function () { var r = read('lc:ttt', null); return !!r && (r.w || 0) > 0; } },
     { id: 'perfect',  icon: 'px-star',   c: '#ffff55', name: 'Perfect Score',         desc: 'Get every Movie Quiz question right', test: function () { return read('lc:quiz', null) === 8; } },
     { id: 'allgames', icon: 'px-star',   c: '#ffaa00', name: 'Completionist',         desc: 'Finish all 9 mini-games', test: function () { return gamesDone() >= 9; }, prog: function () { return [gamesDone(), 9]; } },

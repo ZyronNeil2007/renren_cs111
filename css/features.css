@@ -82,5 +82,55 @@ body.title-body > .sfx-toggle {
 .adv-state { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (max-width: 560px) {
   .adv-toasts { top: 64px; left: 10px; right: 10px; width: auto; }
+  .adv-toast { padding: 6px 10px 6px 6px; gap: 10px; }
+  .adv-toast .adv-icon { width: 40px; height: 40px; }
+  .adv-toast .adv-icon .px { width: 22px; height: 22px; }
   .adv-sub { font-size: 19px; }
 }
+
+/* ---- Title character: idle life, sitting, sleeping and mining (js/herolife.js) ---- */
+.mc-model { transition: transform .28s ease-out, translate .45s ease-out; }
+.hero-char.sitting .mc-model { translate: 0 50px; }                /* hips on the ground ... */
+.hero-char.sitting .mc-leg { rotate: x 84deg; }                    /* ... legs out in front ... */
+.hero-char.sitting .mc-arm { rotate: x 38deg; }                    /* ... hands on the knees */
+.hero-char.sitting .mc-limb { transition-duration: .45s; }
+.hero-char.sitting .hc-nametag { bottom: 126px; }
+.hero-char.sitting .hc-bubble { bottom: 162px; }
+.hero-char.yawning .mc-arm.a { rotate: x 100deg; transition-duration: .3s; }   /* a hand up to the mouth */
+
+.hc-zzz { position: absolute; left: 88px; bottom: 96px; width: 40px; height: 64px; display: none; z-index: 8; pointer-events: none; }
+.hero-char.sleeping .hc-zzz { display: block; }
+.hc-zzz i {
+  position: absolute; left: 0; bottom: 0; font-style: normal; font-family: var(--font-title); color: #fff;
+  text-shadow: 2px 2px 0 #3f3f3f; opacity: 0; animation: zzz 2.6s linear infinite;
+}
+.hc-zzz i:nth-child(1) { font-size: 12px; }
+.hc-zzz i:nth-child(2) { font-size: 16px; animation-delay: .85s; }
+.hc-zzz i:nth-child(3) { font-size: 20px; animation-delay: 1.7s; }
+@keyframes zzz { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(22px, -46px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {      /* static Zs */
+  .hc-zzz i { opacity: 1; }
+  .hc-zzz i:nth-child(2) { transform: translate(9px, -20px); }
+  .hc-zzz i:nth-child(3) { transform: translate(18px, -42px); }
+}
+
+/* mining: swing the arm nearest the block, once per hit (the script restarts it) */
+.hero-char.mining.fr .mc-arm.a, .hero-char.mining.fl .mc-arm.b { animation: mineSwing .4s ease-in-out 1; }
+@keyframes mineSwing { 0% { transform: rotateX(25deg); } 38% { transform: rotateX(145deg); } 100% { transform: rotateX(25deg); } }
+
+.mine-layer { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.mine-hole, .mine-crack { position: absolute; width: 64px; height: 64px; image-rendering: pixelated; }
+.mine-hole {
+  background: conic-gradient(#3b2512 25%, #2f1d0e 0 50%, #3b2512 0 75%, #2f1d0e 0) 0 0 / 16px 16px;
+  box-shadow: inset 0 10px 0 rgba(0, 0, 0, .45), inset 6px 0 0 rgba(0, 0, 0, .25), inset -6px 0 0 rgba(0, 0, 0, .25);
+  transition: opacity .5s;
+}
+.mine-hole.fill { opacity: 0; }                                    /* the block grows back */
+.mine-crack { background-size: 64px 64px; background-repeat: no-repeat; transition: opacity .5s; }
+.mine-crack[data-s="1"] { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20fill%3D%27rgba%280%2C0%2C0%2C.6%29%27%20d%3D%27M7%203h1v1h-1zM7%204h1v1h-1zM8%205h1v1h-1zM8%206h1v1h-1zM7%207h1v1h-1zM7%208h1v1h-1zM6%209h1v1h-1z%27%2F%3E%3C%2Fsvg%3E"); }
+.mine-crack[data-s="2"] { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20fill%3D%27rgba%280%2C0%2C0%2C.6%29%27%20d%3D%27M7%203h1v1h-1zM7%204h1v1h-1zM8%205h1v1h-1zM8%206h1v1h-1zM7%207h1v1h-1zM7%208h1v1h-1zM6%209h1v1h-1zM6%2010h1v1h-1zM5%2011h1v1h-1zM9%206h1v1h-1zM10%206h1v1h-1zM11%207h1v1h-1zM7%202h1v1h-1zM6%201h1v1h-1zM5%208h1v1h-1zM4%208h1v1h-1zM3%209h1v1h-1zM8%209h1v1h-1zM9%2010h1v1h-1z%27%2F%3E%3C%2Fsvg%3E"); }
+.mine-crack[data-s="3"] { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20fill%3D%27rgba%280%2C0%2C0%2C.6%29%27%20d%3D%27M7%203h1v1h-1zM7%204h1v1h-1zM8%205h1v1h-1zM8%206h1v1h-1zM7%207h1v1h-1zM7%208h1v1h-1zM6%209h1v1h-1zM6%2010h1v1h-1zM5%2011h1v1h-1zM9%206h1v1h-1zM10%206h1v1h-1zM11%207h1v1h-1zM7%202h1v1h-1zM6%201h1v1h-1zM5%208h1v1h-1zM4%208h1v1h-1zM3%209h1v1h-1zM8%209h1v1h-1zM9%2010h1v1h-1zM6%200h1v1h-1zM5%2012h1v1h-1zM4%2013h1v1h-1zM10%2010h1v1h-1zM11%2011h1v1h-1zM12%2011h1v1h-1zM12%206h1v1h-1zM13%205h1v1h-1zM2%209h1v1h-1zM1%2010h1v1h-1zM7%2011h1v1h-1zM7%2012h1v1h-1zM8%2013h1v1h-1zM9%204h1v1h-1zM10%203h1v1h-1zM3%207h1v1h-1zM2%206h1v1h-1z%27%2F%3E%3C%2Fsvg%3E"); }
+.mine-crack.fade { opacity: 0; }
+.mine-bit { position: absolute; will-change: transform; }
+.mine-item { position: absolute; width: 14px; height: 14px; border: 2px solid rgba(0, 0, 0, .55); will-change: transform; }
+.mine-pop { position: absolute; font-family: var(--font-title); font-size: 16px; color: #fff; text-shadow: 2px 2px 0 #000; white-space: nowrap; transform: translate(-50%, 0); }
