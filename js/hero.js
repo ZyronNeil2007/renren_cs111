@@ -30,8 +30,8 @@
   pad.className = 'hc-pad';
   pad.innerHTML =
     '<div class="grp">' +
-      '<button type="button" class="mc-btn" data-k="left" aria-label="Walk left">&#9664;</button>' +
-      '<button type="button" class="mc-btn" data-k="right" aria-label="Walk right">&#9654;</button>' +
+      '<button type="button" class="mc-btn" data-k="left" aria-label="Walk left">&#9664;&#xFE0E;</button>' +
+      '<button type="button" class="mc-btn" data-k="right" aria-label="Walk right">&#9654;&#xFE0E;</button>' +
     '</div>' +
     '<div class="grp">' +
       '<button type="button" class="mc-btn" data-k="down" aria-label="Crouch (hold)">&#9660;</button>' +
@@ -50,18 +50,24 @@
   var x = Math.max(24, vw * 0.12);
   var y = 0, vy = 0, dir = 1;
   var target = null, keys = {}, bubbleTimer = 0, waveTimer = 0, hops = 0;
-  var bubbleW = 0, lastT = '', lastDir = 0, lastWalk = null, lastBx = null;
+  var bubbleW = 0, lastT = '', lastWalk = null, lastBx = null;
   var bodyRy = 25;           // current body yaw in degrees (idle 3/4 view, or +-90 while walking)
+  var ryInit = false;        // the --ry variable is written on the first frame, then only when the yaw changes
   var crouching = false, lastCrouch = null;   // sneak: hold the down arrow / S / the pad's down button
   var SNEAK_SPEED = 0.35;    // Minecraft sneaks at about a third of walking speed
   var SNEAK_DROP = 21;       // how far the head drops in the sneak pose (px at scale 1)
+  var arrive = null;         // called once when a walkTo()/dash() journey ends
+  var dashX = null;          // running to this x (entering the Play sign), see js/herolife.js
+  var stepMs = 0;            // time since the last footstep event
+  function stepEvery() { return crouching ? 1200 : 450; }   // matches the CSS swing duration
 
   var lines = [
     'Hi there, I\'m Mark!', 'Welcome to my world!', 'Press Play to begin!',
     'Watch me jump!', 'Nice day for mining.', 'Creeper? Aw man!',
-    'I love this place.', 'Try the arrow keys!', 'Hold the down arrow to sneak!'
+    'I love this place.', 'Try the arrow keys!', 'Hold the down arrow to sneak!',
+    'Click the dirt to dig!', 'Press E to mine the block in front!'
   ];
-  var touchLines = lines.slice(0, 7).concat(['Use the buttons below!', 'Hold the down button to sneak!']);
+  var touchLines = lines.slice(0, 7).concat(['Use the buttons below!', 'Hold the down button to sneak!', 'Tap the dirt to dig!']);
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
 
@@ -121,9 +127,29 @@
    * character's position/scale/body yaw, and a hook that fires when any of those change. */
   var api = window.MCHero = {
     el: hero, model: model, head: headPart, onChange: null,
-    state: function () { return { x: x, y: y, S: S, ry: bodyRy, drop: crouching ? SNEAK_DROP : 0 }; }
+    state: function () {
+      return { x: x, y: y, S: S, W: W, dir: dir, ry: bodyRy, drop: crouching ? SNEAK_DROP : api.extraDrop,
+               walking: !!lastWalk, crouching: crouching, moving: !!(target !== null || keys.left || keys.right || keys.jump || keys.down || dashX !== null) };
+    },
+    /* Used by js/herolife.js (idle life, sign reactions, mining): */
+    extraDrop: 0,                 // how far the head sits lower in a pose of its own (sitting)
+    yawOverride: null,            // body yaw (deg) to hold while standing still, or null for the normal 3/4 view
+    onFrame: null,                // called every frame with the timestamp
+    onGroundClick: null,          // (event, groundTop) -> true when the click was handled (dug a block)
+    say: function (t) { say(t); },
+    face: function (d) { if (d) dir = d < 0 ? -1 : 1; },
+    walkTo: function (px, cb) { target = Math.max(0, Math.min(vw - W, px)); arrive = cb || null; },
+    dash: function (px, cb) { dashX = Math.max(0, Math.min(vw - W, px)); target = null; arrive = cb || null; },
+    stop: function () { target = null; dashX = null; arrive = null; },
+    jump: function () { jump(); },
+    emit: emit
   };
   function changed() { if (api.onChange) api.onChange(); }
+  /* Tell the rest of the page what the character just did. js/sound.js and js/advancements.js
+   * listen for these; nothing else depends on them. */
+  function emit(type, extra) {
+    try { window.dispatchEvent(new CustomEvent('mc:event', { detail: Object.assign({ type: type }, extra || {}) })); } catch (e) {}
+  }
 
   /* ---------------------------------------------------------- layout */
   function layout() {
@@ -153,7 +179,7 @@
     waveTimer = setTimeout(function () { hero.classList.remove('waving'); }, 1200);
   }
   function jump() {
-    if (y === 0) { vy = 15; hops++; if (hops === 5) { say('Whee! Boing!'); hops = 0; } }
+    if (y === 0) { vy = 15; hops++; emit('jump'); if (hops === 5) { say('Whee! Boing!'); hops = 0; } }
   }
   function talk() {
     wave();
@@ -170,8 +196,8 @@
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     var k = e.key.toLowerCase();
-    if (k === 'arrowleft' || k === 'a') { keys.left = true; target = null; e.preventDefault(); }
-    else if (k === 'arrowright' || k === 'd') { keys.right = true; target = null; e.preventDefault(); }
+    if (k === 'arrowleft' || k === 'a') { keys.left = true; target = null; dashX = null; arrive = null; e.preventDefault(); }
+    else if (k === 'arrowright' || k === 'd') { keys.right = true; target = null; dashX = null; arrive = null; e.preventDefault(); }
     else if (k === 'arrowup' || k === 'w' || (k === ' ' && document.activeElement === document.body)) { jump(); e.preventDefault(); }
     else if (k === 'arrowdown' || k === 's') { keys.down = true; e.preventDefault(); }
   });
@@ -190,7 +216,7 @@
     function down(e) {
       e.preventDefault();
       try { btn.setPointerCapture(e.pointerId); } catch (err) {}
-      keys[k] = true; target = null;
+      keys[k] = true; target = null; dashX = null; arrive = null;
       btn.classList.add('on');
       if (k === 'jump') jump();
       if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
@@ -215,7 +241,8 @@
     if (e.target.closest && e.target.closest('a, button, .hero-char')) return;
     var g = sky.querySelector('.ground');
     var top = g ? g.getBoundingClientRect().top : window.innerHeight * 0.76;
-    if (e.clientY >= top - 40) target = Math.max(0, Math.min(vw - W, e.clientX - W / 2));
+    if (api.onGroundClick && api.onGroundClick(e, top)) return;        // dug a block instead
+    if (e.clientY >= top - 40) { target = Math.max(0, Math.min(vw - W, e.clientX - W / 2)); arrive = null; }
   });
 
   /* ---------------------------------------------------------- main loop */
@@ -225,28 +252,38 @@
     var move = 0;
     if (keys.left) move = -1;
     else if (keys.right) move = 1;
+    else if (dashX !== null) {                         // running to the Play sign
+      var dd = dashX - x;
+      if (Math.abs(dd) < 6) { dashX = null; var cb0 = arrive; arrive = null; if (cb0) cb0(); } else move = dd > 0 ? 1 : -1;
+    }
     else if (target !== null) {
       var d = target - x;
-      if (Math.abs(d) < 4) target = null; else move = d > 0 ? 1 : -1;
+      if (Math.abs(d) < 4) { target = null; var cb = arrive; arrive = null; if (cb) cb(); } else move = d > 0 ? 1 : -1;
     }
     if (keys.jump) jump();                            // hold the jump button to keep hopping
 
     crouching = !!keys.down;
-    if (move) { x += move * 4.2 * dt * S * (crouching ? SNEAK_SPEED : 1); dir = move; }
+    if (move) { x += move * 4.2 * dt * S * (crouching ? SNEAK_SPEED : dashX !== null ? 4.2 : 1); dir = move; }
     x = Math.max(0, Math.min(vw - W, x));
 
     if (y > 0 || vy > 0) {
       y += vy * dt; vy -= 0.9 * dt;
-      if (y <= 0) { y = 0; vy = 0; }
+      if (y <= 0) { y = 0; vy = 0; emit('land'); }
     }
 
     var t = 'translate(' + x.toFixed(1) + 'px,' + (-y).toFixed(1) + 'px) scale(' + S + ')';
     if (t !== lastT) { hero.style.transform = t; lastT = t; changed(); }
-    if (crouching !== lastCrouch) { hero.classList.toggle('crouching', crouching); lastCrouch = crouching; changed(); }
+    if (crouching !== lastCrouch) { hero.classList.toggle('crouching', crouching); lastCrouch = crouching; changed(); if (crouching) emit('crouch'); }
     var walking = !!move && y === 0;
-    if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; lastDir = 0; }
+    if (walking !== lastWalk) { hero.classList.toggle('walking', walking); lastWalk = walking; stepMs = stepEvery() * 0.5; }
+    if (walking) {                                    // a footstep each time a foot lands (the swing is 450 ms per step)
+      stepMs += dt * 16.67;
+      if (stepMs >= stepEvery()) { stepMs = 0; emit('step', { v: crouching ? 0.35 : 1 }); }
+    }
     // walking = side view in the travel direction; idle = turn toward the viewer (3/4 view)
-    if (dir !== lastDir) { bodyRy = walking ? dir * 90 : dir * 25; model.style.setProperty('--ry', bodyRy + 'deg'); lastDir = dir; changed(); }
+    var wantRy = walking ? dir * 90 : api.yawOverride !== null ? api.yawOverride : dir * 25;
+    if (wantRy !== bodyRy || !ryInit) { ryInit = true; bodyRy = wantRy; model.style.setProperty('--ry', bodyRy + 'deg'); changed(); }
+    if (api.onFrame) api.onFrame(now);
 
     // keep the speech bubble fully on screen (shift in character-local units)
     if (bubbleW && bubble.classList.contains('show')) {

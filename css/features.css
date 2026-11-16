@@ -1,0 +1,202 @@
+/* ==========================================================
+   FEATURES: sound toggle, advancements, idle / mining effects,
+   day-night, weather. Loaded after world-objects.css.
+   ========================================================== */
+
+/* ---- Sound effects toggle (js/sound.js) ---- */
+.sfx-toggle {
+  display: inline-grid; place-items: center; flex: none;
+  width: 44px; height: 44px; min-width: 44px; padding: 0; margin: 0;
+}
+.sfx-toggle svg { display: block; }
+.sfx-toggle.is-on { background: #3f8f3f; box-shadow: inset 4px 4px 0 #7fe07f, inset -4px -4px 0 #1f5a1f; }
+.sfx-toggle.is-on:hover, .sfx-toggle.is-on:focus-visible { background: #4fa84f; }
+.topbar .sfx-toggle { margin-left: auto; }          /* far right of the top bar ... */
+.topbar .nametag + .sfx-toggle { margin-left: 10px; }   /* ... or right after the name tag on the Plains page */
+body.title-body > .sfx-toggle {
+  position: fixed; z-index: 60;
+  top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right));
+}
+@media (max-width: 420px) {                      /* keep the top bar on one row beside the toggle */
+  .topbar { gap: 8px; padding-left: 10px; padding-right: 10px; }
+  .topbar .nametag { padding: 3px 6px; }
+  .topbar .nametag-text { font-size: 13px; }
+  .topbar .nametag + .sfx-toggle { margin-left: 4px; }
+  .topbar > .mc-btn:first-child { padding-left: 12px; padding-right: 12px; }
+}
+
+/* ---- extra pixel icons for the advancements (same mask technique as .px in style.css) ---- */
+.px-gem { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2011%208%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M3%200h5v1H3zM1%201h9v1H1zM0%202h11v1H0zM1%203h9v1H1zM2%204h7v1H2zM3%205h5v1H3zM4%206h3v1H4zM5%207h1v1H5z%27%2F%3E%3C%2Fsvg%3E"); }
+.px-moon { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%209%209%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M3%200h4v1H3zM2%201h3v1H2zM1%202h3v1H1zM1%203h3v1H1zM1%204h3v1H1zM1%205h3v1H1zM2%206h3v1H2zM3%207h4v1H3zM2%208h3v1H2z%27%2F%3E%3C%2Fsvg%3E"); }
+.px-boot { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%208%208%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M2%200h3v1H2zM2%201h3v1H2zM2%202h3v1H2zM2%203h3v1H2zM2%204h5v1H2zM1%205h7v1H1zM0%206h8v2H0z%27%2F%3E%3C%2Fsvg%3E"); }
+.px-spring { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%207%208%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M3%200h1v1H3zM2%201h3v1H2zM1%202h5v1H1zM3%203h1v5H3z%27%2F%3E%3C%2Fsvg%3E"); }
+.px-zzz { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%205%205%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%200h5v1H0zM3%201h1v1H3zM2%202h1v1H2zM1%203h1v1H1zM0%204h5v1H0z%27%2F%3E%3C%2Fsvg%3E"); }
+.px-note { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%209%209%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%203h2v3H0zM2%202h1v5H2zM3%201h1v7H3zM4%200h1v9H4zM6%203h1v3H6zM8%201h1v7H8z%27%2F%3E%3C%2Fsvg%3E"); }
+.px-star { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%209%209%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M4%200h1v2H4zM3%202h3v1H3zM0%203h9v1H0zM1%204h7v1H1zM2%205h5v1H2zM1%206h3v1H1zM5%206h3v1H5zM0%207h2v1H0zM7%207h2v1H7z%27%2F%3E%3C%2Fsvg%3E"); }
+.px-block { --m: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%208%208%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20d%3D%27M0%200h8v1H0zM0%201h1v6H0zM7%201h1v6H7zM0%207h8v1H0zM3%203h2v2H3z%27%2F%3E%3C%2Fsvg%3E"); }
+
+/* ---- Advancement toasts + the list on the Plains page (js/advancements.js) ---- */
+.adv-toasts {
+  position: fixed; top: 12px; right: 66px; z-index: 9500; width: min(340px, calc(100vw - 20px));
+  display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.adv-toast {
+  display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 8px;
+  background: #232323; border: 4px solid #000; color: #fff;
+  box-shadow: inset 4px 4px 0 #5a5a5a, inset -4px -4px 0 #101010, 0 6px 0 rgba(0, 0, 0, .35);
+  opacity: 0; transform: translateY(-24px);
+  transition: transform .4s cubic-bezier(.2, .8, .2, 1), opacity .3s;
+}
+.adv-toast.show { opacity: 1; transform: none; }
+.adv-icon {
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; font-size: 26px; line-height: 1;
+  background: #3a3a3a; border: 4px solid #000; color: var(--ic, #ffd24d);
+  box-shadow: inset 3px 3px 0 #6a6a6a, inset -3px -3px 0 #1e1e1e;
+}
+.adv-icon .px { width: 26px; height: 26px; filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, .55)); }
+.adv-text { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
+.adv-head { font-weight: 400; font-size: 13px; line-height: 1.25; color: #ffff55; text-shadow: 2px 2px 0 #3f3f00; }
+.adv-toast .adv-name { font-size: 15px; line-height: 1.25; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; overflow-wrap: anywhere; }
+
+.adv { margin-top: 30px; }
+.adv h2 { margin-top: 0; }
+.adv-sub { margin: 0 0 16px; font-size: 22px; }
+.adv-sub b { color: #2f6f2f; font-weight: 400; }
+.adv-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.adv-card {
+  position: relative;
+  display: flex; align-items: flex-start; gap: 12px; padding: 10px; min-width: 0;
+  background: #9d9d9d; border: 4px solid #000; color: #2a2a2a;
+  box-shadow: inset 3px 3px 0 #b9b9b9, inset -3px -3px 0 #6d6d6d;
+}
+.adv-card.is-locked .adv-icon { color: #6a6a6a; background: #4a4a4a; }
+.adv-card.is-locked .adv-icon .px { filter: none; opacity: .75; }
+.adv-card.is-done { background: #2b2b2b; color: #fff; box-shadow: inset 3px 3px 0 #555, inset -3px -3px 0 #151515; }
+.adv-card .adv-name { font-size: 18px; line-height: 1.2; }
+.adv-card.is-done .adv-name { color: #ffff55; text-shadow: 2px 2px 0 #3f3f00; }
+.adv-desc { font-size: 16px; line-height: 1.25; overflow-wrap: anywhere; }
+.adv-card.is-done .adv-desc { color: #d8d8d8; }
+.adv-bar { display: block; height: 8px; margin-top: 6px; background: #555; border: 2px solid #000; }
+.adv-bar i { display: block; height: 100%; width: 0; background: #ffd24d; }
+.adv-count { font-size: 13px; opacity: .85; }
+.adv-state { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 560px) {
+  .adv-toasts { top: 64px; left: 10px; right: 10px; width: auto; }
+  .adv-toast { padding: 6px 10px 6px 6px; gap: 10px; }
+  .adv-toast .adv-icon { width: 40px; height: 40px; }
+  .adv-toast .adv-icon .px { width: 22px; height: 22px; }
+  .adv-sub { font-size: 19px; }
+}
+
+/* ---- Title character: idle life, sitting, sleeping and mining (js/herolife.js) ---- */
+.mc-model { transition: transform .28s ease-out, translate .45s ease-out; }
+.hero-char.sitting .mc-model { translate: 0 50px; }                /* hips on the ground ... */
+.hero-char.sitting .mc-leg { rotate: x 84deg; }                    /* ... legs out in front ... */
+.hero-char.sitting .mc-arm { rotate: x 38deg; }                    /* ... hands on the knees */
+.hero-char.sitting .mc-limb { transition-duration: .45s; }
+.hero-char.sitting .hc-nametag { bottom: 126px; }
+.hero-char.sitting .hc-bubble { bottom: 162px; }
+.hero-char.yawning .mc-arm.a { rotate: x 100deg; transition-duration: .3s; }   /* a hand up to the mouth */
+
+.hc-zzz { position: absolute; left: 88px; bottom: 96px; width: 40px; height: 64px; display: none; z-index: 8; pointer-events: none; }
+.hero-char.sleeping .hc-zzz { display: block; }
+.hc-zzz i {
+  position: absolute; left: 0; bottom: 0; font-style: normal; font-family: var(--font-title); color: #fff;
+  text-shadow: 2px 2px 0 #3f3f3f; opacity: 0; animation: zzz 2.6s linear infinite;
+}
+.hc-zzz i:nth-child(1) { font-size: 12px; }
+.hc-zzz i:nth-child(2) { font-size: 16px; animation-delay: .85s; }
+.hc-zzz i:nth-child(3) { font-size: 20px; animation-delay: 1.7s; }
+@keyframes zzz { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(22px, -46px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {      /* static Zs */
+  .hc-zzz i { opacity: 1; }
+  .hc-zzz i:nth-child(2) { transform: translate(9px, -20px); }
+  .hc-zzz i:nth-child(3) { transform: translate(18px, -42px); }
+}
+
+/* mining: swing the arm nearest the block, once per hit (the script restarts it) */
+.hero-char.mining.fr .mc-arm.a, .hero-char.mining.fl .mc-arm.b { animation: mineSwing .4s ease-in-out 1; }
+@keyframes mineSwing { 0% { transform: rotateX(25deg); } 38% { transform: rotateX(145deg); } 100% { transform: rotateX(25deg); } }
+
+.mine-layer { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.mine-hole, .mine-crack { position: absolute; width: 64px; height: 64px; image-rendering: pixelated; }
+.mine-hole {
+  background: conic-gradient(#3b2512 25%, #2f1d0e 0 50%, #3b2512 0 75%, #2f1d0e 0) 0 0 / 16px 16px;
+  box-shadow: inset 0 10px 0 rgba(0, 0, 0, .45), inset 6px 0 0 rgba(0, 0, 0, .25), inset -6px 0 0 rgba(0, 0, 0, .25);
+  transition: opacity .5s;
+}
+.mine-hole.fill { opacity: 0; }                                    /* the block grows back */
+.mine-crack { background-size: 64px 64px; background-repeat: no-repeat; transition: opacity .5s; }
+.mine-crack[data-s="1"] { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20fill%3D%27rgba%280%2C0%2C0%2C.6%29%27%20d%3D%27M7%203h1v1h-1zM7%204h1v1h-1zM8%205h1v1h-1zM8%206h1v1h-1zM7%207h1v1h-1zM7%208h1v1h-1zM6%209h1v1h-1z%27%2F%3E%3C%2Fsvg%3E"); }
+.mine-crack[data-s="2"] { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20fill%3D%27rgba%280%2C0%2C0%2C.6%29%27%20d%3D%27M7%203h1v1h-1zM7%204h1v1h-1zM8%205h1v1h-1zM8%206h1v1h-1zM7%207h1v1h-1zM7%208h1v1h-1zM6%209h1v1h-1zM6%2010h1v1h-1zM5%2011h1v1h-1zM9%206h1v1h-1zM10%206h1v1h-1zM11%207h1v1h-1zM7%202h1v1h-1zM6%201h1v1h-1zM5%208h1v1h-1zM4%208h1v1h-1zM3%209h1v1h-1zM8%209h1v1h-1zM9%2010h1v1h-1z%27%2F%3E%3C%2Fsvg%3E"); }
+.mine-crack[data-s="3"] { background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2016%2016%27%20shape-rendering%3D%27crispEdges%27%3E%3Cpath%20fill%3D%27rgba%280%2C0%2C0%2C.6%29%27%20d%3D%27M7%203h1v1h-1zM7%204h1v1h-1zM8%205h1v1h-1zM8%206h1v1h-1zM7%207h1v1h-1zM7%208h1v1h-1zM6%209h1v1h-1zM6%2010h1v1h-1zM5%2011h1v1h-1zM9%206h1v1h-1zM10%206h1v1h-1zM11%207h1v1h-1zM7%202h1v1h-1zM6%201h1v1h-1zM5%208h1v1h-1zM4%208h1v1h-1zM3%209h1v1h-1zM8%209h1v1h-1zM9%2010h1v1h-1zM6%200h1v1h-1zM5%2012h1v1h-1zM4%2013h1v1h-1zM10%2010h1v1h-1zM11%2011h1v1h-1zM12%2011h1v1h-1zM12%206h1v1h-1zM13%205h1v1h-1zM2%209h1v1h-1zM1%2010h1v1h-1zM7%2011h1v1h-1zM7%2012h1v1h-1zM8%2013h1v1h-1zM9%204h1v1h-1zM10%203h1v1h-1zM3%207h1v1h-1zM2%206h1v1h-1z%27%2F%3E%3C%2Fsvg%3E"); }
+.mine-crack.fade { opacity: 0; }
+.mine-bit { position: absolute; will-change: transform; }
+.mine-item { position: absolute; width: 14px; height: 14px; border: 2px solid rgba(0, 0, 0, .55); will-change: transform; }
+.mine-pop { position: absolute; font-family: var(--font-title); font-size: 16px; color: #fff; text-shadow: 2px 2px 0 #000; white-space: nowrap; transform: translate(-50%, 0); }
+
+/* ==========================================================
+   DAY / NIGHT on the title screen (js/daynight.js sets the variables)
+   ========================================================== */
+.title-body .sky {
+  background: linear-gradient(var(--tod-1, #4f9bff) 0 22%, var(--tod-2, #5fa6ff) 22% 40%, var(--tod-3, #78b6ff) 40% 58%,
+                              var(--tod-4, #94c6ff) 58% 76%, var(--tod-5, #b4d8ff) 76% 100%);
+}
+.tod-stars { position: absolute; left: 0; right: 0; top: 0; height: 62%; opacity: var(--tod-stars, 0); pointer-events: none; }
+.tod-stars i { position: absolute; background: #fff; animation: twinkle 3.2s steps(2, end) infinite alternate; }
+.tod-stars .s1 { width: 3px; height: 3px; opacity: .8; }
+.tod-stars .s2 { width: 4px; height: 4px; }
+.tod-stars .s3 { width: 6px; height: 6px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .25); }
+@keyframes twinkle { from { opacity: 1; } to { opacity: .3; } }
+
+.tod-orb {
+  --sz: calc(64px * var(--sc, 1));
+  position: absolute; width: var(--sz); height: var(--sz); opacity: 0; pointer-events: none;
+  left: calc(var(--ox, 50) * 1% - var(--sz) / 2); top: calc(var(--oy, 60) * 1% - var(--sz) / 2);
+}
+.tod-sun {                                       /* the square Minecraft sun */
+  background: #ffe45c;
+  box-shadow: inset 0 0 0 calc(7px * var(--sc, 1)) #fff3a8, 0 0 0 calc(7px * var(--sc, 1)) rgba(255, 228, 92, .3), 0 0 70px rgba(255, 225, 110, .5);
+}
+.tod-moon {                                      /* ... and the square moon, with craters */
+  background: #e8edff;
+  box-shadow: inset 0 0 0 calc(5px * var(--sc, 1)) #cdd6f6, inset calc(18px * var(--sc, 1)) calc(14px * var(--sc, 1)) 0 calc(-6px * var(--sc, 1)) #c3cdf2,
+              inset calc(-14px * var(--sc, 1)) calc(-18px * var(--sc, 1)) 0 calc(-4px * var(--sc, 1)) #c3cdf2, 0 0 60px rgba(190, 205, 255, .35);
+}
+.tod-tint { position: absolute; inset: 0; background: rgba(6, 10, 44, var(--tod-tint, 0)); pointer-events: none; }
+.title-body .cloud { opacity: calc(1 - var(--tod-night, 0) * .6); }
+.title-body[data-tod]:not([data-tod='day']) .hero-char { filter: brightness(var(--tod-bright, 1)); }
+
+/* two standing torches either side of the Play sign, lit from dusk to dawn */
+.tod-torches {
+  position: fixed; left: 0; right: 0; bottom: var(--ground-h, 190px); height: 0; z-index: 1; pointer-events: none;
+  opacity: var(--lit, 0); visibility: hidden;
+}
+.tod-torches.lit { visibility: visible; }
+.tod-torch { position: absolute; bottom: -6px; width: 12px; height: 44px; background: linear-gradient(90deg, #6b4520 0 34%, #8a5a2b 34% 68%, #a8743a 68%); transform-origin: 50% 100%; scale: var(--sc, 1); }
+.tod-torch.l { left: calc(50% - 215px); }
+.tod-torch.r { left: calc(50% + 203px); }
+.tod-torch b {                                   /* the flame, and its glow */
+  position: absolute; left: -2px; bottom: calc(100% - 2px); width: 16px; height: 16px; background: #ff9d1a;
+  box-shadow: inset 4px 4px 0 #ffd24d, inset -4px -4px 0 #e0641a; transform-origin: 50% 100%; animation: torch .5s steps(2, end) infinite;
+}
+.tod-torch b::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 230px; height: 230px; margin: -115px 0 0 -115px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 175, 70, .4), rgba(255, 175, 70, .14) 40%, rgba(255, 175, 70, 0) 68%); animation: glow 1.3s ease-in-out infinite alternate;
+}
+@keyframes torch { from { transform: scale(1, 1); } to { transform: scale(.88, 1.14); } }
+@keyframes glow { from { opacity: .8; } to { opacity: 1; } }
+@media (max-width: 700px) { .tod-torch.l { left: calc(50% - 150px); } .tod-torch.r { left: calc(50% + 138px); } }
+@media (max-width: 420px) { .tod-torch.l { left: calc(50% - 128px); } .tod-torch.r { left: calc(50% + 116px); } }
+
+/* ==========================================================
+   BIOME WEATHER (rain on the Plains, ash haze in the Soul Sand Valley; js/scene.js)
+   ========================================================== */
+.fx-rain, .fx-gloom { position: absolute; inset: 0; pointer-events: none; }
+.fx-rain { animation: fx-shower 80s linear -3s infinite; }          /* a shower of ~45 s, then a dry spell */
+.fx-rain.is-steady { animation: none; }                             /* ?weather=rain */
+.fx-gloom.plains { background: rgba(58, 72, 100, .24); opacity: 0; animation: fx-shower 80s linear -3s infinite; }
+.fx-gloom.plains.is-steady { animation: none; opacity: 1; }
+@keyframes fx-shower { 0% { opacity: 0; } 6% { opacity: 1; } 55% { opacity: 1; } 66% { opacity: 0; } 100% { opacity: 0; } }
+.fx-gloom.soul { background: radial-gradient(ellipse at 50% 100%, rgba(255, 120, 60, .16), rgba(70, 55, 85, .14) 70%); opacity: .55; animation: haze 9s ease-in-out infinite alternate; }
+@keyframes haze { from { opacity: .35; } to { opacity: .8; } }

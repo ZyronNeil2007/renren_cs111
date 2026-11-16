@@ -43,6 +43,8 @@
   var yaw = 0, pitch = 0;     // current head rotation, relative to the body
   var raf = 0, lastTs = 0, lastStr = '';
   var baseBottom = 0;         // viewport y of the character's layout bottom (see measure)
+  var ambient = null;         // {yaw, pitch} held by js/herolife.js (looking around, dozing off): beats the mouse
+  var focus = null;           // {x, y} viewport point the head is told to look at (the Play sign): beats the mouse
 
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
 
@@ -56,17 +58,22 @@
 
   /* Where the head should point right now: {yaw, pitch} relative to the body. */
   function aim() {
-    if (!tracking || !enabled) return null;
+    if (!enabled) return null;
+    if (ambient) return ambient;
+    if (!focus && !tracking) return null;
     var s = C.state();
     var hx = s.x + 40 * s.S;                         // head centre (the head box is 8x8 texels at 5px)
     var hy = baseBottom - s.y - (140 - (s.drop || 0)) * s.S;       // the head sits lower while crouching
     var rx = Math.max(240, Math.min(520, window.innerWidth * 0.45));
     var ry = Math.max(220, Math.min(420, window.innerHeight * 0.55));
-    var dx = px - hx, dy = py - hy;
+    var dx = (focus ? focus.x : px) - hx, dy = (focus ? focus.y : py) - hy;
     var n = Math.sqrt((dx / rx) * (dx / rx) + (dy / ry) * (dy / ry));
-    if (n >= 1) return null;                         // outside the zone
-    var w = n <= 0.75 ? 1 : (1 - n) / 0.25;          // fade out over the outer quarter
-    w = w * w * (3 - 2 * w);
+    var w = 1;
+    if (!focus) {                                    // the mouse only counts inside the zone
+      if (n >= 1) return null;                       // outside the zone
+      w = n <= 0.75 ? 1 : (1 - n) / 0.25;            // fade out over the outer quarter
+      w = w * w * (3 - 2 * w);
+    }
     var nx = clamp(dx / rx, -1, 1), ny = clamp(dy / ry, -1, 1);
     // aim in screen space, then express it relative to the body so the body's own
     // 3/4 (idle) or side (walking) orientation is respected and the neck limit applies
@@ -109,7 +116,7 @@
     else { tracking = false; kick(); }
   }
   function reset() {                                  // snap back to forward and stop
-    clearTimeout(holdTimer); tracking = false; touchId = null;
+    clearTimeout(holdTimer); tracking = false; touchId = null; ambient = null; focus = null;
     if (raf) { cancelAnimationFrame(raf); raf = 0; }
     yaw = pitch = 0; apply();
   }
@@ -163,7 +170,13 @@
   document.addEventListener('touchcancel', touchDone, opts);
 
   /* ---- keep in step with the character and the layout ---- */
-  C.onChange = function () { if (tracking) kick(); };  // walking / jumping / turning changes where to look
+  C.onChange = function () { if (tracking || focus) kick(); };  // walking / jumping / turning changes where to look
+
+  /* Small handle for js/herolife.js. Both calls take null to let go. */
+  window.MCHeadTrack = {
+    ambient: function (yaw, pitch) { ambient = yaw == null ? null : { yaw: yaw, pitch: pitch || 0 }; kick(); },
+    lookAt: function (x, y) { focus = x == null ? null : { x: x, y: y }; kick(); }
+  };
   window.addEventListener('resize', measure);
   window.addEventListener('orientationchange', measure);
   measure();

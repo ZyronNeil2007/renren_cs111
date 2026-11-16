@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../css/biomes.css">
   <link rel="stylesheet" href="../css/scene.css">
   <link rel="stylesheet" href="../css/world-objects.css">
+  <link rel="stylesheet" href="../css/features.css">
   <script src="../js/transition.js"></script>
 </head>
 <body data-biome="end" data-bob style="--c:#4a2a7a; --c2:#2f1a52;">
@@ -22,7 +23,7 @@
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <a class="mc-btn" data-morph data-biome="plains" data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664; World</a>
+    <a class="mc-btn" data-morph data-biome="plains" data-world="the Plains" href="welcome.html" style="--c:#5d9b3a; --c2:#4a7f2d;">&#9664;&#xFE0E; World</a>
     <span class="topbar-title">CHAPTER 6 / 8 &middot; <span class="biome">THE END</span></span>
   </header>
 
@@ -35,23 +36,23 @@
 
     <section class="posters" aria-label="Movie posters">
       <button class="poster-btn" data-movie="m-freeguy" aria-pressed="true">
-        <img src="../img/My%20favorite%20Movie/cover/free_guy.jpg" alt="Free Guy poster"><div class="ph-poster">Add poster<br>free_guy.jpg</div>
+        <img decoding="async" src="../img/My%20favorite%20Movie/cover/free_guy.jpg" alt="Free Guy poster"><div class="ph-poster">Add poster<br>free_guy.jpg</div>
         <span>Free Guy</span>
       </button>
       <button class="poster-btn" data-movie="m-jumanji" aria-pressed="false">
-        <img src="../img/My%20favorite%20Movie/cover/jumanji.jpg" alt="Jumanji poster"><div class="ph-poster">Add poster<br>jumanji.jpg</div>
+        <img loading="lazy" decoding="async" src="../img/My%20favorite%20Movie/cover/jumanji.jpg" alt="Jumanji poster"><div class="ph-poster">Add poster<br>jumanji.jpg</div>
         <span>Jumanji</span>
       </button>
       <button class="poster-btn" data-movie="m-shrek2" aria-pressed="false">
-        <img src="../img/My%20favorite%20Movie/cover/shrek2.jpg" alt="Shrek 2 poster"><div class="ph-poster">Add poster<br>shrek2.jpg</div>
+        <img loading="lazy" decoding="async" src="../img/My%20favorite%20Movie/cover/shrek2.jpg" alt="Shrek 2 poster"><div class="ph-poster">Add poster<br>shrek2.jpg</div>
         <span>Shrek 2</span>
       </button>
       <button class="poster-btn" data-movie="m-mitchells" aria-pressed="false">
-        <img src="../img/My%20favorite%20Movie/cover/TheMitchellsvs.theMachines.jpg" alt="The Mitchells vs. the Machines poster"><div class="ph-poster">Add poster<br>TheMitchellsvs.theMachines.jpg</div>
+        <img loading="lazy" decoding="async" src="../img/My%20favorite%20Movie/cover/TheMitchellsvs.theMachines.jpg" alt="The Mitchells vs. the Machines poster"><div class="ph-poster">Add poster<br>TheMitchellsvs.theMachines.jpg</div>
         <span>The Mitchells vs. the Machines</span>
       </button>
       <button class="poster-btn" data-movie="m-thor" aria-pressed="false">
-        <img src="../img/My%20favorite%20Movie/cover/thor_ragnarok.jpg" alt="Thor: Ragnarok poster"><div class="ph-poster">Add poster<br>thor_ragnarok.jpg</div>
+        <img loading="lazy" decoding="async" src="../img/My%20favorite%20Movie/cover/thor_ragnarok.jpg" alt="Thor: Ragnarok poster"><div class="ph-poster">Add poster<br>thor_ragnarok.jpg</div>
         <span>Thor: Ragnarok</span>
       </button>
     </section>
@@ -169,8 +170,8 @@
     </section>
 
     <nav class="pager">
-      <a class="mc-btn" data-morph data-biome="badlands" data-world="the Badlands" href="my_favorite_food.html" style="--c:#c4572f; --c2:#a8482a;">&#9664; Food</a>
-      <a class="mc-btn" data-morph data-biome="soul" data-world="Soul Sand Valley" href="my_song.html" style="--c:#2b4a63; --c2:#1e3550;">My Song &#9654;</a>
+      <a class="mc-btn" data-morph data-biome="badlands" data-world="the Badlands" href="my_favorite_food.html" style="--c:#c4572f; --c2:#a8482a;">&#9664;&#xFE0E; Food</a>
+      <a class="mc-btn" data-morph data-biome="soul" data-world="Soul Sand Valley" href="my_song.html" style="--c:#2b4a63; --c2:#1e3550;">My Song &#9654;&#xFE0E;</a>
     </nav>
   </main>
 
@@ -181,5 +182,7 @@
   <script src="../js/scene.js"></script>
   <script src="../js/pages.js"></script>
   <script src="../js/games.js"></script>
+  <script src="../js/sound.js"></script>
+  <script src="../js/advancements.js"></script>
 </body>
 </html>

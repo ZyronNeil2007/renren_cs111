@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../css/biomes.css">
   <link rel="stylesheet" href="../css/scene.css">
   <link rel="stylesheet" href="../css/world-objects.css">
+  <link rel="stylesheet" href="../css/features.css">
   <script src="../js/transition.js"></script>
 </head>
 <body data-biome="plains" style="--c:#5d9b3a; --c2:#4a7f2d;">
@@ -22,7 +23,7 @@
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <a class="mc-btn" data-morph data-biome="title" data-world="the Overworld" href="../index.html" style="--c:#78b6ff; --c2:#5fa6ff;">&#9664; Title</a>
+    <a class="mc-btn" data-morph data-biome="title" data-world="the Overworld" href="../index.html" style="--c:#78b6ff; --c2:#5fa6ff;">&#9664;&#xFE0E; Title</a>
     <span class="topbar-title">SELECT A CHAPTER &middot; <span class="biome">PLAINS</span></span>
     <span class="nametag" title="Player name"><span class="nametag-text">renren</span></span>
   </header>
@@ -69,6 +70,13 @@
       </a>
     </nav>
 
+    <section class="panel adv" id="adv" aria-labelledby="adv-title">
+      <h2 id="adv-title">Advancements</h2>
+      <p class="adv-sub"><b id="adv-count">0 / 0</b> earned. They unlock as you explore, play and mess around on the title screen.</p>
+      <ul class="adv-grid" id="adv-grid"></ul>
+      <noscript><p class="adv-sub">Turn on JavaScript to see your advancements.</p></noscript>
+    </section>
+
     <section class="panel game" data-game="mine" aria-labelledby="game-title">
       <div class="game-tag">MINI GAME</div>
       <h2 id="game-title">Mine a Block</h2>
@@ -85,5 +93,7 @@
   <script src="../js/scene.js"></script>
   <script src="../js/home.js"></script>
   <script src="../js/games.js"></script>
+  <script src="../js/sound.js"></script>
+  <script src="../js/advancements.js"></script>
 </body>
 </html>

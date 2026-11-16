@@ -79,7 +79,7 @@
     document.getElementById('next').addEventListener('click', function () { load(cur + 1, true); });
 
     audio.addEventListener('play', function () { player.classList.add('playing'); playBtn.innerHTML = '&#10074;&#10074; Pause'; });
-    audio.addEventListener('pause', function () { player.classList.remove('playing'); playBtn.innerHTML = '&#9654; Play'; });
+    audio.addEventListener('pause', function () { player.classList.remove('playing'); playBtn.innerHTML = '&#9654;&#xFE0E; Play'; });
     audio.addEventListener('ended', function () { load(cur + 1, true); });
     audio.addEventListener('error', function () { if (cur !== -1) msg.hidden = false; });
     audio.addEventListener('timeupdate', function () {
