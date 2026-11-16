@@ -42,7 +42,11 @@
     get: function (k, d) {
       try { var v = localStorage.getItem('lc:' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; }
     },
-    set: function (k, v) { try { localStorage.setItem('lc:' + k, JSON.stringify(v)); } catch (e) {} }
+    set: function (k, v) {
+      try { localStorage.setItem('lc:' + k, JSON.stringify(v)); } catch (e) {}
+      // tell js/advancements.js that a score changed (it only reads the saved state)
+      try { window.dispatchEvent(new CustomEvent('mc:store', { detail: { key: k } })); } catch (e) {}
+    }
   };
 
   /* Resolve with the subset of srcs that actually load. */
@@ -441,6 +445,7 @@
             var li = el('li'); li.textContent = st.s; done.appendChild(li);
             ui.set('step', next + '/' + n); beep(520, 0.07);
             if (next === n) {
+              store.set('cook', (store.get('cook', 0) || 0) + 1);      // dishes served (read by the advancements)
               ui.say(miss === 0 ? 'Perfect! ' + d.name + ' is served with zero mistakes.'
                 : d.name + ' is ready! ' + miss + ' mistake' + (miss > 1 ? 's' : '') + ' along the way.');
               beep(780, 0.25);
